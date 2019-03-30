@@ -1,4 +1,5 @@
-/target
+tic-tac-toe/target
 **/*.rs.bk
+Cargo.lock
 /hello_rust
 /logs/template.md

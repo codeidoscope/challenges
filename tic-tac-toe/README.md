@@ -11,7 +11,11 @@ time.
 followed the installation instructions given on the
 [Rust website](https://www.rust-lang.org/tools/install).
 
+## Running the programme
+You can start the programme by running `cargo build`.
+
 ## Features
+- [ ] 3x3 board
 - [ ] Human player (X)
 - [ ] Unbeatable Computer player (O)
 - [ ] Input validation
