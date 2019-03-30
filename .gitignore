@@ -1,4 +1,5 @@
 tic-tac-toe/target
+tic-tac-toe/.idea
 **/*.rs.bk
 Cargo.lock
 /hello_rust
