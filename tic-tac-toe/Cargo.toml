@@ -1,0 +1,7 @@
+[package]
+name = "tic-tac-toe"
+version = "0.1.0"
+authors = ["Marion LV <marion@8thlight.com>"]
+edition = "2018"
+
+[dependencies]
