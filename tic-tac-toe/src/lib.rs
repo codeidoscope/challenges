@@ -1,24 +1,24 @@
-fn greet_user() -> String {
-    String::from("Welcome to Tic Tac Toe! You are player X")
+fn display_prompt(prompt: &str) -> &str {
+    prompt
 }
-
-fn prompt_user() -> String {
-    String::from("Please select a position between 1 and 9: ")
-}
-
 
 #[cfg(test)]
 mod tests {
-    use crate::greet_user;
-    use crate::prompt_user;
+    use crate::display_prompt;
+    use std::collections::HashMap;
 
     #[test]
-    fn it_greets_a_user_when_game_starts() {
-        assert_eq!(greet_user(), "Welcome to Tic Tac Toe! You are player X")
-    }
+    fn it_displays_a_prompt_to_the_user() {
+        let mut prompts = HashMap::new();
+        prompts.insert("welcome", "Welcome to Tic Tac Toe! You are player X");
+        prompts.insert("select_position", "Please select a position between 1 and 9: ");
 
-    #[test]
-    fn it_prompts_a_user_to_choose_a_position() {
-        assert_eq!(prompt_user(), "Please select a position between 1 and 9: ")
+        let welcome_prompt = prompts.get(&"welcome").unwrap();
+        let select_position_prompt = prompts.get(&"select_position").unwrap();
+
+        assert_eq!(display_prompt(welcome_prompt),
+                   "Welcome to Tic Tac Toe! You are player X");
+        assert_eq!(display_prompt(select_position_prompt),
+                   "Please select a position between 1 and 9: ");
     }
 }
