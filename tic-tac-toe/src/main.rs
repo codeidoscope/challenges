@@ -22,6 +22,18 @@ impl Board {
 
         Self { size, tiles }
     }
+
+    fn len(&self) -> usize {
+        self.tiles.len()
+    }
+
+    fn get_rows(&self) -> impl Iterator<Item=impl Iterator<Item=&Tile>> {
+        (0..self.size).map(move |row_index| {
+            let row_start = row_index * self.size;
+            let row_end = row_start + self.size;
+            self.tiles[row_start..row_end].iter()
+        })
+    }
 }
 
 fn main() {
@@ -50,14 +62,32 @@ mod tests {
     }
 
     #[test]
-    fn it_creates_a_3_by_3_board_of_tiles() {
+    fn it_creates_a_3_by_3_board() {
         let board = Board::new(3);
         assert_eq!(board.tiles.len(), 9)
     }
 
     #[test]
-    fn it_creates_a_4_by_4_board_of_tiles() {
+    fn it_creates_a_4_by_4_board() {
         let board = Board::new(4);
         assert_eq!(board.tiles.len(), 16)
+    }
+
+    #[test]
+    fn returns_the_length_of_the_board() {
+        let board = Board::new(3);
+        assert_eq!(board.len(), 9)
+    }
+
+    #[test]
+    fn it_returns_the_row_of_a_3_by_3_board() {
+        let board = Board::new(3);
+        assert_eq!(board.get_rows().count(), 3)
+    }
+
+    #[test]
+    fn it_returns_the_row_of_a_4_by_4_board() {
+        let board = Board::new(4);
+        assert_eq!(board.get_rows().count(), 4)
     }
 }
