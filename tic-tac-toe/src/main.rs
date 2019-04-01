@@ -5,30 +5,34 @@ fn display_prompt(prompt: &str) -> &str {
 #[derive(Debug)]
 struct Tile {
     symbol: String,
-    position: u32,
 }
 
-fn create_board(size: u32) -> Vec<Tile>{
-    let board_size: u32 = size * size;
-    let mut board: Vec<Tile> = Vec::new();
+struct Board {
+    size: usize,
+    tiles: Vec<Tile>,
+}
 
-    for i in 0..board_size {
-        board.push(Tile{symbol: format!("[{}] ", i+1), position: i})
+impl Board {
+    fn new(size: usize) -> Self {
+        let mut tiles: Vec<Tile> = Vec::new();
+
+        for i in 0..size * size {
+            tiles.push(Tile { symbol: format!("[{}] ", i + 1) })
+        }
+
+        Self { size, tiles }
     }
-    println!("{:?}", board);
-    board
 }
 
 fn main() {
-    println!("Hello!")
+    println!("{:?}", Board::new(3).tiles)
 }
 
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
 
-    use crate::display_prompt;
-    use crate::create_board;
+    use super::*;
 
     #[test]
     fn it_displays_a_prompt_to_the_user() {
@@ -39,7 +43,6 @@ mod tests {
         let welcome_prompt = prompts.get(&"welcome").unwrap();
         let select_position_prompt = prompts.get(&"select_position").unwrap();
 
-        print!("{}", display_prompt(welcome_prompt));
         assert_eq!(display_prompt(welcome_prompt),
                    "Welcome to Tic Tac Toe! You are player X");
         assert_eq!(display_prompt(select_position_prompt),
@@ -48,13 +51,13 @@ mod tests {
 
     #[test]
     fn it_creates_a_3_by_3_board_of_tiles() {
-        let board = create_board(3);
-        assert_eq!(board.len(), 9)
+        let board = Board::new(3);
+        assert_eq!(board.tiles.len(), 9)
     }
 
     #[test]
     fn it_creates_a_4_by_4_board_of_tiles() {
-        let board = create_board(4);
-        assert_eq!(board.len(), 16)
+        let board = Board::new(4);
+        assert_eq!(board.tiles.len(), 16)
     }
 }
