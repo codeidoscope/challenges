@@ -49,6 +49,7 @@ fn display_prompt(prompt: &str) -> &str {
 #[derive(Debug)]
 struct Tile {
     symbol: String,
+    position: usize,
 }
 
 struct Board {
@@ -61,7 +62,7 @@ impl Board {
         let mut tiles: Vec<Tile> = Vec::new();
 
         for i in 0..size * size {
-            tiles.push(Tile { symbol: format!("[{}] ", i + 1) })
+            tiles.push(Tile { symbol: format!("[{}] ", i + 1), position: i })
         }
 
         Self { size, tiles }
