@@ -1,4 +1,5 @@
 mod board;
+mod ui;
 
 fn main() {
     let board = board::Board::new(3);
