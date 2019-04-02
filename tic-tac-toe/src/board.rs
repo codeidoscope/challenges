@@ -10,32 +10,12 @@ fn tiles_to_string<'board>(tiles: impl Iterator<Item=&'board Tile>) -> String {
     tiles_as_string
 }
 
-fn rows_to_string<'board>(board: Board) -> String {
-    let mut board_string: String = String::new();
-    for row in board.get_rows() {
-        board_string.push_str(tiles_to_string(row).as_str());
+fn section_to_string<'board>(board_section: impl Iterator<Item=impl Iterator<Item=&'board Tile>>) -> String {
+    let mut section_to_string: String = String::new();
+    for section in board_section {
+        section_to_string.push_str(tiles_to_string(section).as_str());
     }
-    board_string
-}
-
-fn columns_to_string<'board>(board: Board) -> String {
-    let mut board_string: String = String::new();
-    for column in board.get_columns() {
-        board_string.push_str(tiles_to_string(column).as_str());
-    }
-    board_string
-}
-
-fn right_diagonal_to_string<'board>(board: Board) -> String {
-    let mut board_string: String = String::new();
-    board_string.push_str(tiles_to_string(board.get_right_diagonal()).as_str());
-    board_string
-}
-
-fn left_diagonal_to_string<'board>(board: Board) -> String {
-    let mut board_string: String = String::new();
-    board_string.push_str(tiles_to_string(board.get_left_diagonal()).as_str());
-    board_string
+    section_to_string
 }
 
 fn display_prompt(prompt: &str) -> &str {
@@ -116,78 +96,103 @@ mod tests {
     #[test]
     fn it_creates_a_3_by_3_board() {
         let board = Board::new(3);
+
         assert_eq!(board.tiles.len(), 9)
     }
 
     #[test]
     fn it_creates_a_4_by_4_board() {
         let board = Board::new(4);
+
         assert_eq!(board.tiles.len(), 16)
     }
 
     #[test]
     fn returns_the_length_of_the_board() {
         let board = Board::new(3);
+
         assert_eq!(board.len(), 9)
     }
 
     #[test]
     fn it_returns_the_row_of_a_3_by_3_board() {
         let board = Board::new(3);
+        let rows = board.get_rows();
+
         assert_eq!(board.get_rows().count(), 3);
-        assert_eq!(rows_to_string(board), "[1] [2] [3] \
-                                           [4] [5] [6] \
-                                           [7] [8] [9] ")
+        assert_eq!(section_to_string(rows), "[1] [2] [3] \
+                                             [4] [5] [6] \
+                                             [7] [8] [9] ")
     }
 
     #[test]
     fn it_returns_the_row_of_a_4_by_4_board() {
         let board = Board::new(4);
+        let rows = board.get_rows();
+
         assert_eq!(board.get_rows().count(), 4);
-        assert_eq!(rows_to_string(board), "[1] [2] [3] [4] \
-                                           [5] [6] [7] [8] \
-                                           [9] [10] [11] [12] \
-                                           [13] [14] [15] [16] ")
+        assert_eq!(section_to_string(rows), "[1] [2] [3] [4] \
+                                             [5] [6] [7] [8] \
+                                             [9] [10] [11] [12] \
+                                             [13] [14] [15] [16] ")
     }
 
     #[test]
     fn it_returns_the_columns_of_a_3_by_3_board() {
         let board = Board::new(3);
-        assert_eq!(columns_to_string(board), "[1] [4] [7] \
-                                              [2] [5] [8] \
-                                              [3] [6] [9] ")
+        let columns = board.get_columns();
+
+        assert_eq!(board.get_columns().count(), 3);
+        assert_eq!(section_to_string(columns), "[1] [4] [7] \
+                                                [2] [5] [8] \
+                                                [3] [6] [9] ")
     }
 
     #[test]
     fn it_returns_the_columns_of_a_4_by_4_board() {
         let board = Board::new(4);
-        assert_eq!(columns_to_string(board), "[1] [5] [9] [13] \
-                                              [2] [6] [10] [14] \
-                                              [3] [7] [11] [15] \
-                                              [4] [8] [12] [16] ")
+        let columns = board.get_columns();
+
+        assert_eq!(board.get_columns().count(), 4);
+        assert_eq!(section_to_string(columns), "[1] [5] [9] [13] \
+                                                [2] [6] [10] [14] \
+                                                [3] [7] [11] [15] \
+                                                [4] [8] [12] [16] ")
     }
 
     #[test]
     fn it_returns_the_right_diagonal_of_a_3_by_3_board() {
         let board = Board::new(3);
-        assert_eq!(right_diagonal_to_string(board), "[1] [5] [9] ")
+        let right_diagonal = board.get_right_diagonal();
+
+        assert_eq!(board.get_right_diagonal().count(), 3);
+        assert_eq!(tiles_to_string(right_diagonal), "[1] [5] [9] ")
     }
 
     #[test]
     fn it_returns_the_right_diagonal_of_a_4_by_4_board() {
         let board = Board::new(4);
-        assert_eq!(right_diagonal_to_string(board), "[1] [6] [11] [16] ")
+        let right_diagonal = board.get_right_diagonal();
+
+        assert_eq!(board.get_right_diagonal().count(), 4);
+        assert_eq!(tiles_to_string(right_diagonal), "[1] [6] [11] [16] ")
     }
 
     #[test]
     fn it_returns_the_left_diagonal_of_a_3_by_3_board() {
         let board = Board::new(3);
-        assert_eq!(left_diagonal_to_string(board), "[3] [5] [7] ")
+        let left_diagonal = board.get_left_diagonal();
+
+        assert_eq!(board.get_left_diagonal().count(), 3);
+        assert_eq!(tiles_to_string(left_diagonal), "[3] [5] [7] ")
     }
 
     #[test]
     fn it_returns_the_left_diagonal_of_a_4_by_4_board() {
         let board = Board::new(4);
-        assert_eq!(left_diagonal_to_string(board), "[4] [7] [10] [13] ")
+        let left_diagonal = board.get_left_diagonal();
+
+        assert_eq!(board.get_left_diagonal().count(), 4);
+        assert_eq!(tiles_to_string(left_diagonal), "[4] [7] [10] [13] ")
     }
 }
