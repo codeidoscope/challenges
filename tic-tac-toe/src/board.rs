@@ -18,6 +18,13 @@ fn section_to_string<'board>(board_section: impl Iterator<Item=impl Iterator<Ite
     section_to_string
 }
 
+pub fn format_board(board: Board) -> String {
+    let rows = board.get_rows();
+    let formatted_rows = rows.map(|row| format!("{}{}", tiles_to_string(row), "\n"))
+        .collect::<String>();
+    formatted_rows
+}
+
 fn display_prompt(prompt: &str) -> &str {
     prompt
 }
@@ -145,5 +152,13 @@ mod tests {
 
         assert_eq!(board.get_left_diagonal().count(), 3);
         assert_eq!(tiles_to_string(left_diagonal), "[3] [5] [7] ")
+    }
+
+    #[test]
+    fn it_formats_a_3_by_3_board() {
+        let board = Board::new(3);
+        assert_eq!(format_board(board), "[1] [2] [3] \n\
+                                         [4] [5] [6] \n\
+                                         [7] [8] [9] \n")
     }
 }
