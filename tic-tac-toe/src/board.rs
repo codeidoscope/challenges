@@ -101,13 +101,6 @@ mod tests {
     }
 
     #[test]
-    fn it_creates_a_4_by_4_board() {
-        let board = Board::new(4);
-
-        assert_eq!(board.tiles.len(), 16)
-    }
-
-    #[test]
     fn returns_the_length_of_the_board() {
         let board = Board::new(3);
 
@@ -126,18 +119,6 @@ mod tests {
     }
 
     #[test]
-    fn it_returns_the_row_of_a_4_by_4_board() {
-        let board = Board::new(4);
-        let rows = board.get_rows();
-
-        assert_eq!(board.get_rows().count(), 4);
-        assert_eq!(section_to_string(rows), "[1] [2] [3] [4] \
-                                             [5] [6] [7] [8] \
-                                             [9] [10] [11] [12] \
-                                             [13] [14] [15] [16] ")
-    }
-
-    #[test]
     fn it_returns_the_columns_of_a_3_by_3_board() {
         let board = Board::new(3);
         let columns = board.get_columns();
@@ -146,18 +127,6 @@ mod tests {
         assert_eq!(section_to_string(columns), "[1] [4] [7] \
                                                 [2] [5] [8] \
                                                 [3] [6] [9] ")
-    }
-
-    #[test]
-    fn it_returns_the_columns_of_a_4_by_4_board() {
-        let board = Board::new(4);
-        let columns = board.get_columns();
-
-        assert_eq!(board.get_columns().count(), 4);
-        assert_eq!(section_to_string(columns), "[1] [5] [9] [13] \
-                                                [2] [6] [10] [14] \
-                                                [3] [7] [11] [15] \
-                                                [4] [8] [12] [16] ")
     }
 
     #[test]
@@ -170,29 +139,11 @@ mod tests {
     }
 
     #[test]
-    fn it_returns_the_right_diagonal_of_a_4_by_4_board() {
-        let board = Board::new(4);
-        let right_diagonal = board.get_right_diagonal();
-
-        assert_eq!(board.get_right_diagonal().count(), 4);
-        assert_eq!(tiles_to_string(right_diagonal), "[1] [6] [11] [16] ")
-    }
-
-    #[test]
     fn it_returns_the_left_diagonal_of_a_3_by_3_board() {
         let board = Board::new(3);
         let left_diagonal = board.get_left_diagonal();
 
         assert_eq!(board.get_left_diagonal().count(), 3);
         assert_eq!(tiles_to_string(left_diagonal), "[3] [5] [7] ")
-    }
-
-    #[test]
-    fn it_returns_the_left_diagonal_of_a_4_by_4_board() {
-        let board = Board::new(4);
-        let left_diagonal = board.get_left_diagonal();
-
-        assert_eq!(board.get_left_diagonal().count(), 4);
-        assert_eq!(tiles_to_string(left_diagonal), "[4] [7] [10] [13] ")
     }
 }
