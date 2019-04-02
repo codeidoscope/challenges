@@ -79,10 +79,21 @@ impl Board {
             self.tiles[row_start..row_end].iter()
         })
     }
-}
 
-fn main() {
-    println!("{:?}", Board::new(3).tiles)
+    fn get_columns(&self) -> impl Iterator<Item=impl Iterator<Item=&Tile>> {
+        (0..self.size).map(move |column_index| {
+            (0..self.size)
+                .map(move |row_index| &self.tiles[row_index * self.size + column_index])
+        })
+    }
+
+    fn get_right_diagonal(&self) -> impl Iterator<Item=&Tile> {
+        (0..self.size).map(move |idx| &self.tiles[idx * self.size + idx])
+    }
+
+    fn get_left_diagonal(&self) -> impl Iterator<Item=&Tile> {
+        (0..self.size).map(move |idx| &self.tiles[idx * self.size + self.size - 1 - idx])
+    }
 }
 
 #[cfg(test)]
@@ -127,12 +138,60 @@ mod tests {
     #[test]
     fn it_returns_the_row_of_a_3_by_3_board() {
         let board = Board::new(3);
-        assert_eq!(board.get_rows().count(), 3)
+        assert_eq!(board.get_rows().count(), 3);
+        assert_eq!(rows_to_string(board), "[1] [2] [3] \
+                                           [4] [5] [6] \
+                                           [7] [8] [9] ")
     }
 
     #[test]
     fn it_returns_the_row_of_a_4_by_4_board() {
         let board = Board::new(4);
-        assert_eq!(board.get_rows().count(), 4)
+        assert_eq!(board.get_rows().count(), 4);
+        assert_eq!(rows_to_string(board), "[1] [2] [3] [4] \
+                                           [5] [6] [7] [8] \
+                                           [9] [10] [11] [12] \
+                                           [13] [14] [15] [16] ")
+    }
+
+    #[test]
+    fn it_returns_the_columns_of_a_3_by_3_board() {
+        let board = Board::new(3);
+        assert_eq!(columns_to_string(board), "[1] [4] [7] \
+                                              [2] [5] [8] \
+                                              [3] [6] [9] ")
+    }
+
+    #[test]
+    fn it_returns_the_columns_of_a_4_by_4_board() {
+        let board = Board::new(4);
+        assert_eq!(columns_to_string(board), "[1] [5] [9] [13] \
+                                              [2] [6] [10] [14] \
+                                              [3] [7] [11] [15] \
+                                              [4] [8] [12] [16] ")
+    }
+
+    #[test]
+    fn it_returns_the_right_diagonal_of_a_3_by_3_board() {
+        let board = Board::new(3);
+        assert_eq!(right_diagonal_to_string(board), "[1] [5] [9] ")
+    }
+
+    #[test]
+    fn it_returns_the_right_diagonal_of_a_4_by_4_board() {
+        let board = Board::new(4);
+        assert_eq!(right_diagonal_to_string(board), "[1] [6] [11] [16] ")
+    }
+
+    #[test]
+    fn it_returns_the_left_diagonal_of_a_3_by_3_board() {
+        let board = Board::new(3);
+        assert_eq!(left_diagonal_to_string(board), "[3] [5] [7] ")
+    }
+
+    #[test]
+    fn it_returns_the_left_diagonal_of_a_4_by_4_board() {
+        let board = Board::new(4);
+        assert_eq!(left_diagonal_to_string(board), "[4] [7] [10] [13] ")
     }
 }
