@@ -1,3 +1,47 @@
+fn main() {
+    let board = Board::new(3);
+}
+
+fn print_tiles<'board>(tiles: impl Iterator<Item=&'board Tile>) {
+    let formatted_tiles = tiles.map(|tile| tile.symbol.as_str())
+        .collect::<String>();
+    println!("{}", formatted_tiles)
+}
+
+fn tiles_to_string<'board>(tiles: impl Iterator<Item=&'board Tile>) -> String {
+    let tiles_as_string = tiles.map(|tile| tile.symbol.as_str())
+        .collect::<String>();
+    tiles_as_string
+}
+
+fn rows_to_string<'board>(board: Board) -> String {
+    let mut board_string: String = String::new();
+    for row in board.get_rows() {
+        board_string.push_str(tiles_to_string(row).as_str());
+    }
+    board_string
+}
+
+fn columns_to_string<'board>(board: Board) -> String {
+    let mut board_string: String = String::new();
+    for column in board.get_columns() {
+        board_string.push_str(tiles_to_string(column).as_str());
+    }
+    board_string
+}
+
+fn right_diagonal_to_string<'board>(board: Board) -> String {
+    let mut board_string: String = String::new();
+    board_string.push_str(tiles_to_string(board.get_right_diagonal()).as_str());
+    board_string
+}
+
+fn left_diagonal_to_string<'board>(board: Board) -> String {
+    let mut board_string: String = String::new();
+    board_string.push_str(tiles_to_string(board.get_left_diagonal()).as_str());
+    board_string
+}
+
 fn display_prompt(prompt: &str) -> &str {
     prompt
 }
