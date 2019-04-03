@@ -3,6 +3,8 @@ fn print_tiles<'board>(tiles: impl Iterator<Item=&'board Tile>) {
         .collect::<String>();
     println!("{}", formatted_tiles)
 }
+use std::cell::RefCell;
+use std::cell::Ref;
 
 fn tiles_to_string<'board>(tiles: impl Iterator<Item=&'board Tile>) -> String {
     let tiles_as_string = tiles.map(|tile| tile.symbol.as_str())
@@ -73,6 +75,12 @@ impl Board {
     fn get_left_diagonal(&self) -> impl Iterator<Item=&Tile> {
         (0..self.size).map(move |idx| &self.tiles[idx * self.size + self.size - 1 - idx])
     }
+
+    fn mark_with_symbol(&mut self, symbol: String, position: u32) -> &mut Board {
+        let position_index = position - 1;
+        self.tiles[position_index as usize].symbol = RefCell::new(format!("[{}] ", symbol));
+        self
+    }
 }
 
 #[cfg(test)]
@@ -139,5 +147,11 @@ mod tests {
         assert_eq!(format_board(board), "[1] [2] [3] \n\
                                          [4] [5] [6] \n\
                                          [7] [8] [9] \n")
+    fn it_marks_the_board_with_the_player_symbol() {
+        let mut board = Board::new(3);
+        let player = HumanPlayer::new("X".to_string());
+        assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "[3] ");
+        board.mark_with_symbol(player.symbol, 3);
+        assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "[X] ");
     }
 }
