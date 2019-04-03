@@ -1,13 +1,15 @@
+use std::cell::RefCell;
+use std::cell::Ref;
+use core::borrow::BorrowMut;
+
 fn print_tiles<'board>(tiles: impl Iterator<Item=&'board Tile>) {
-    let formatted_tiles = tiles.map(|tile| tile.symbol.as_str())
+    let formatted_tiles = tiles.map(|tile| tile.symbol.borrow_mut().to_string())
         .collect::<String>();
     println!("{}", formatted_tiles)
 }
-use std::cell::RefCell;
-use std::cell::Ref;
 
 fn tiles_to_string<'board>(tiles: impl Iterator<Item=&'board Tile>) -> String {
-    let tiles_as_string = tiles.map(|tile| tile.symbol.as_str())
+    let tiles_as_string = tiles.map(|tile| tile.symbol.borrow_mut().to_string())
         .collect::<String>();
     tiles_as_string
 }
@@ -29,7 +31,7 @@ pub fn format_board(board: Board) -> String {
 
 #[derive(Debug)]
 struct Tile {
-    symbol: String,
+    symbol: RefCell<String>,
     position: usize,
 }
 
@@ -43,7 +45,7 @@ impl Board {
         let mut tiles: Vec<Tile> = Vec::new();
 
         for i in 0..size * size {
-            tiles.push(Tile { symbol: format!("[{}] ", i + 1), position: i })
+            tiles.push(Tile { symbol: RefCell::new(format!("[{}] ", i + 1)), position: i })
         }
 
         Self { size, tiles }
@@ -86,6 +88,7 @@ impl Board {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::human_player::HumanPlayer;
 
     #[test]
     fn it_creates_a_3_by_3_board() {
@@ -146,12 +149,15 @@ mod tests {
         let board = Board::new(3);
         assert_eq!(format_board(board), "[1] [2] [3] \n\
                                          [4] [5] [6] \n\
-                                         [7] [8] [9] \n")
-    fn it_marks_the_board_with_the_player_symbol() {
-        let mut board = Board::new(3);
-        let player = HumanPlayer::new("X".to_string());
-        assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "[3] ");
-        board.mark_with_symbol(player.symbol, 3);
-        assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "[X] ");
+                                         [7] [8] [9] \n");
+
+        #[test]
+        fn it_marks_the_board_with_the_player_symbol() {
+            let mut board = Board::new(3);
+            let player = HumanPlayer::new("X".to_string());
+            assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "[3] ");
+            board.mark_with_symbol(player.symbol, 3);
+            assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "[X] ");
+        }
     }
 }
