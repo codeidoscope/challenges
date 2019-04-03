@@ -2,33 +2,6 @@ use std::cell::RefCell;
 use std::cell::Ref;
 use core::borrow::BorrowMut;
 
-fn print_tiles<'board>(tiles: impl Iterator<Item=&'board Tile>) {
-    let formatted_tiles = tiles.map(|tile| tile.symbol.borrow_mut().to_string())
-        .collect::<String>();
-    println!("{}", formatted_tiles)
-}
-
-fn tiles_to_string<'board>(tiles: impl Iterator<Item=&'board Tile>) -> String {
-    let tiles_as_string = tiles.map(|tile| tile.symbol.borrow_mut().to_string())
-        .collect::<String>();
-    tiles_as_string
-}
-
-fn section_to_string<'board>(board_section: impl Iterator<Item=impl Iterator<Item=&'board Tile>>) -> String {
-    let mut section_to_string: String = String::new();
-    for section in board_section {
-        section_to_string.push_str(tiles_to_string(section).as_str());
-    }
-    section_to_string
-}
-
-pub fn format_board(board: Board) -> String {
-    let rows = board.get_rows();
-    let formatted_rows = rows.map(|row| format!("{}{}", tiles_to_string(row), "\n"))
-        .collect::<String>();
-    formatted_rows
-}
-
 #[derive(Debug)]
 struct Tile {
     symbol: RefCell<String>,
@@ -82,7 +55,45 @@ impl Board {
         let position_index = position - 1;
         self.tiles[position_index as usize].symbol.replace(format!("[{}] ", symbol));
     }
+
+    fn is_position_occupied(&self, position: u32) -> bool {
+        let position_index = position - 1;
+        let tile_symbol = self.tiles[position_index as usize].symbol.borrow_mut().to_string();
+        if tile_symbol == "[X] " || tile_symbol == "[O] " {
+            true
+        } else {
+            false
+        }
+    }
 }
+
+fn print_tiles<'board>(tiles: impl Iterator<Item=&'board Tile>) {
+    let formatted_tiles = tiles.map(|tile| tile.symbol.borrow_mut().to_string())
+        .collect::<String>();
+    println!("{}", formatted_tiles)
+}
+
+fn tiles_to_string<'board>(tiles: impl Iterator<Item=&'board Tile>) -> String {
+    let tiles_as_string = tiles.map(|tile| tile.symbol.borrow_mut().to_string())
+        .collect::<String>();
+    tiles_as_string
+}
+
+fn section_to_string<'board>(board_section: impl Iterator<Item=impl Iterator<Item=&'board Tile>>) -> String {
+    let mut section_to_string: String = String::new();
+    for section in board_section {
+        section_to_string.push_str(tiles_to_string(section).as_str());
+    }
+    section_to_string
+}
+
+pub fn format_board(board: Board) -> String {
+    let rows = board.get_rows();
+    let formatted_rows = rows.map(|row| format!("{}{}", tiles_to_string(row), "\n"))
+        .collect::<String>();
+    formatted_rows
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -165,5 +176,18 @@ mod tests {
         assert_eq!(format_board(board), "[1] [2] [X] \n\
                                          [4] [5] [6] \n\
                                          [7] [8] [9] \n");
+    }
+
+    #[test]
+    fn it_return_true_if_the_position_is_occupied() {
+        let board = Board::new(3);
+        board.mark_with_symbol("X".to_string(), 5);
+        assert_eq!(board.is_position_occupied(5), true);
+    }
+
+    #[test]
+    fn it_return_false_if_the_position_is_not_occupied() {
+        let board = Board::new(3);
+        assert_eq!(board.is_position_occupied(6), false);
     }
 }
