@@ -78,10 +78,9 @@ impl Board {
         (0..self.size).map(move |idx| &self.tiles[idx * self.size + self.size - 1 - idx])
     }
 
-    fn mark_with_symbol(&mut self, symbol: String, position: u32) -> &mut Board {
+    pub fn mark_with_symbol(&self, symbol: String, position: u32) {
         let position_index = position - 1;
-        self.tiles[position_index as usize].symbol = RefCell::new(format!("[{}] ", symbol));
-        self
+        self.tiles[position_index as usize].symbol.replace(format!("[{}] ", symbol));
     }
 }
 
@@ -147,17 +146,24 @@ mod tests {
     #[test]
     fn it_formats_a_3_by_3_board() {
         let board = Board::new(3);
+
         assert_eq!(format_board(board), "[1] [2] [3] \n\
                                          [4] [5] [6] \n\
                                          [7] [8] [9] \n");
+    }
 
-        #[test]
-        fn it_marks_the_board_with_the_player_symbol() {
-            let mut board = Board::new(3);
-            let player = HumanPlayer::new("X".to_string());
-            assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "[3] ");
-            board.mark_with_symbol(player.symbol, 3);
-            assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "[X] ");
-        }
+    #[test]
+    fn it_marks_the_board_with_the_player_symbol() {
+        let board = Board::new(3);
+        let player = HumanPlayer::new("X".to_string());
+
+        assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "[3] ");
+
+        board.mark_with_symbol(player.symbol, 3);
+
+        assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "[X] ");
+        assert_eq!(format_board(board), "[1] [2] [X] \n\
+                                         [4] [5] [6] \n\
+                                         [7] [8] [9] \n");
     }
 }
