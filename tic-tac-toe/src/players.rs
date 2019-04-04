@@ -4,6 +4,11 @@ use std::num::ParseIntError;
 
 pub trait Player {
     fn get_move(&self) -> u32;
+    fn get_symbol(&self) -> &String;
+}
+
+pub fn get_player_move<T: Player>(player: T) -> u32 {
+    player.get_move()
 }
 
 pub struct Human {
@@ -27,6 +32,21 @@ impl Player for Human {
                 )
             }
         }
+    }
+
+    fn get_symbol(&self) -> &String {
+        &self.symbol
+    }
+}
+
+impl Player for Computer {
+    fn get_move(&self) -> u32 {
+        // TODO: Implement computer player
+        4
+    }
+
+    fn get_symbol(&self) -> &String {
+        &self.symbol
     }
 }
 
@@ -61,7 +81,6 @@ fn in_range(input: u32) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::board::Board;
 
     #[test]
     fn it_create_a_player_with_a_given_symbol() {
