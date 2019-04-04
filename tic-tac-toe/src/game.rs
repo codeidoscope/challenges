@@ -1,13 +1,13 @@
-use crate::human_player::HumanPlayer;
 use crate::board::format_board;
 use crate::board::Board;
 use std::mem;
+use crate::players::Player;
 
 pub struct Game {
     board: Board,
     status: String,
-    current_player: HumanPlayer,
-    opponent: HumanPlayer,
+    current_player: Player,
+    opponent: Player,
 }
 
 impl Game {
@@ -29,13 +29,13 @@ impl Game {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::human_player::HumanPlayer;
+    use crate::players::Human;
 
     #[test]
     fn it_swaps_two_players() {
         let board = Board::new(3);
-        let player_one = HumanPlayer::new("X".to_string());
-        let player_two = HumanPlayer::new("O".to_string());
+        let player_one = Human::new("X".to_string());
+        let player_two = Human::new("O".to_string());
         let mut game = Game::new(board, player_one, player_two);
 
         assert_eq!(game.current_player.symbol, "X");

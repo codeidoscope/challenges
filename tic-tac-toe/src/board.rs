@@ -98,7 +98,7 @@ pub fn format_board(board: Board) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::human_player::HumanPlayer;
+    use crate::players::Human;
 
     #[test]
     fn it_creates_a_3_by_3_board() {
@@ -166,7 +166,7 @@ mod tests {
     #[test]
     fn it_marks_the_board_with_the_player_symbol() {
         let board = Board::new(3);
-        let player = HumanPlayer::new("X".to_string());
+        let player = Human::new("X".to_string());
 
         assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "[3] ");
 
