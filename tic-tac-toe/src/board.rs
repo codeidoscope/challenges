@@ -1,5 +1,4 @@
 use std::cell::RefCell;
-use core::borrow::BorrowMut;
 
 #[derive(Debug)]
 struct Tile {
@@ -66,16 +65,11 @@ impl Board {
     }
 }
 
-fn print_tiles<'board>(tiles: impl Iterator<Item=&'board Tile>) {
-    let formatted_tiles = tiles.map(|tile| tile.symbol.borrow_mut().to_string())
+pub fn format_board(board: &Board) -> String {
+    let rows = board.get_rows();
+    let formatted_rows = rows.map(|row| format!("{}{}", tiles_to_string(row), "\n"))
         .collect::<String>();
-    println!("{}", formatted_tiles)
-}
-
-fn tiles_to_string<'board>(tiles: impl Iterator<Item=&'board Tile>) -> String {
-    let tiles_as_string = tiles.map(|tile| tile.symbol.borrow_mut().to_string())
-        .collect::<String>();
-    tiles_as_string
+    formatted_rows
 }
 
 fn section_to_string<'board>(board_section: impl Iterator<Item=impl Iterator<Item=&'board Tile>>) -> String {
@@ -86,11 +80,16 @@ fn section_to_string<'board>(board_section: impl Iterator<Item=impl Iterator<Ite
     section_to_string
 }
 
-pub fn format_board(board: Board) -> String {
-    let rows = board.get_rows();
-    let formatted_rows = rows.map(|row| format!("{}{}", tiles_to_string(row), "\n"))
+fn tiles_to_string<'board>(tiles: impl Iterator<Item=&'board Tile>) -> String {
+    let tiles_as_string = tiles.map(|tile| tile.symbol.borrow_mut().to_string())
         .collect::<String>();
-    formatted_rows
+    tiles_as_string
+}
+
+pub fn print_tiles<'board>(tiles: impl Iterator<Item=&'board Tile>) {
+    let formatted_tiles = tiles.map(|tile| tile.symbol.borrow_mut().to_string())
+        .collect::<String>();
+    println!("{}", formatted_tiles)
 }
 
 
@@ -157,9 +156,9 @@ mod tests {
     fn it_formats_a_3_by_3_board() {
         let board = Board::new(3);
 
-        assert_eq!(format_board(board), "[1] [2] [3] \n\
-                                         [4] [5] [6] \n\
-                                         [7] [8] [9] \n");
+        assert_eq!(format_board(&board), "[1] [2] [3] \n\
+                                          [4] [5] [6] \n\
+                                          [7] [8] [9] \n");
     }
 
     #[test]
@@ -172,9 +171,9 @@ mod tests {
         board.mark_with_symbol(player.symbol, 3);
 
         assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "[X] ");
-        assert_eq!(format_board(board), "[1] [2] [X] \n\
-                                         [4] [5] [6] \n\
-                                         [7] [8] [9] \n");
+        assert_eq!(format_board(&board), "[1] [2] [X] \n\
+                                          [4] [5] [6] \n\
+                                          [7] [8] [9] \n");
     }
 
     #[test]

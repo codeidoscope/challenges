@@ -1,5 +1,7 @@
 use crate::players::Human;
-use crate::players::Player;
+use crate::players::Computer;
+use crate::players::get_player_move;
+use crate::game::Game;
 
 mod board;
 mod players;
@@ -9,5 +11,7 @@ mod game;
 fn main() {
     let board = board::Board::new(3);
     let player_one = Human::new("X".to_string());
-    player_one.get_move();
+    let player_two = Human::new("O".to_string());
+    let mut game = Game::new(board, Box::new(player_one), Box::new(player_two));
+    game.run();
 }

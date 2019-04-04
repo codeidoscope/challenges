@@ -22,7 +22,7 @@ pub struct Computer {
 impl Player for Human {
     fn get_move(&self) -> u32 {
         loop {
-            print!("Select a position between 1 and 9: ");
+            println!("Select a position between 1 and 9: ");
             io::stdout().flush().expect("Failed to flush stdout");
             let input = read_input();
             match numeric(&input) {

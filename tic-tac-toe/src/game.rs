@@ -1,5 +1,6 @@
 use crate::board::Board;
 use crate::players::Player;
+use crate::board::format_board;
 
 pub struct Game {
     board: Board,
@@ -20,6 +21,20 @@ impl Game {
 
     fn swap_players(&mut self) {
         std::mem::swap(&mut self.current_player, &mut self.opponent);
+    }
+
+    pub fn run(&mut self) {
+        while self.status == "IN_PROGRESS" {
+            print!("{}", format_board(&self.board));
+            self.play_turn();
+        }
+    }
+
+    fn play_turn(&mut self) {
+        let player_symbol = self.current_player.get_symbol().to_string();
+        let player_move = self.current_player.get_move();
+        self.board.mark_with_symbol(player_symbol, player_move);
+        self.swap_players();
     }
 }
 
