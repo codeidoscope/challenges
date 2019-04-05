@@ -42,11 +42,11 @@ impl Game {
         self.swap_players();
     }
 
-    pub fn are_symbols_aligned<'board>(&self, board_section: &mut impl Iterator<Item=&'board Tile>, symbol: String) -> bool {
+    fn are_symbols_aligned<'board>(&self, board_section: &mut impl Iterator<Item=&'board Tile>, symbol: String) -> bool {
         board_section.all(|tile| tile.symbol.borrow_mut().to_string() == RefCell::new(symbol.clone()).borrow_mut().to_string())
     }
 
-    pub fn is_winning_row(&self, symbol: String) -> bool {
+    fn is_winning_row(&self, symbol: String) -> bool {
         let rows = self.board.get_rows();
         let mut result = Vec::new();
         for mut row in rows {
@@ -60,7 +60,7 @@ impl Game {
         }
     }
 
-    pub fn is_winning_column(&self, symbol: String) -> bool {
+    fn is_winning_column(&self, symbol: String) -> bool {
         let columns = self.board.get_columns();
         let mut result = Vec::new();
         for mut column in columns {
@@ -81,6 +81,18 @@ impl Game {
         let left_diagonal_is_winning = self.are_symbols_aligned(&mut left_diagonal, symbol.clone());
 
         if right_diagonal_is_winning || left_diagonal_is_winning {
+            true
+        } else {
+            false
+        }
+    }
+
+    fn is_winner(&self, symbol: String) -> bool {
+        let winning_row = self.is_winning_row(symbol.clone());
+        let winning_column = self.is_winning_column(symbol.clone());
+        let winning_diagonal = self.is_winning_diagonal(symbol.clone());
+
+        if winning_row || winning_column || winning_diagonal {
             true
         } else {
             false
@@ -249,5 +261,29 @@ mod tests {
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
         assert_eq!(game.is_winning_diagonal("[X] ".to_string()), false)
+    }
+
+    #[test]
+    fn it_returns_true_if_there_if_three_symbols_are_aligned_on_the_board() {
+        let board = Board::new(3);
+        board.mark_with_symbol("X".to_string(), 3);
+        board.mark_with_symbol("X".to_string(), 5);
+        board.mark_with_symbol("X".to_string(), 7);
+
+        let player_one = Human::new("X".to_string());
+        let player_two = Computer::new("O".to_string());
+        let game = Game::new(board, Box::new(player_one), Box::new(player_two));
+
+        assert_eq!(game.is_winner("[X] ".to_string()), true)
+    }
+
+    #[test]
+    fn it_returns_true_if_there_if_three_symbols_are_not_aligned_on_the_board() {
+        let board = Board::new(3);
+        let player_one = Human::new("X".to_string());
+        let player_two = Computer::new("O".to_string());
+        let game = Game::new(board, Box::new(player_one), Box::new(player_two));
+
+        assert_eq!(game.is_winner("[X] ".to_string()), false)
     }
 }
