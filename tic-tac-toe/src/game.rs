@@ -98,6 +98,8 @@ impl Game {
     fn get_status(&self, symbol: String) -> String {
         if self.is_winner(symbol.clone()) {
             format!("PLAYER_{}_WINS", symbol.clone())
+        } else if self.is_full() {
+            format!("DRAW")
         } else {
             format!("IN_PROGRESS")
         }
@@ -365,5 +367,27 @@ mod tests {
         let symbol_string = format!("[{}] ", player_one_symbol.to_string());
 
         assert_eq!(game.get_status(symbol_string), "IN_PROGRESS".to_string())
+    }
+
+    #[test]
+    fn it_returns_draw_status_if_the_board_is_full() {
+        let board = Board::new(3);
+        board.mark_with_symbol("O".to_string(), 1);
+        board.mark_with_symbol("O".to_string(), 2);
+        board.mark_with_symbol("X".to_string(), 3);
+        board.mark_with_symbol("X".to_string(), 4);
+        board.mark_with_symbol("X".to_string(), 5);
+        board.mark_with_symbol("O".to_string(), 6);
+        board.mark_with_symbol("O".to_string(), 7);
+        board.mark_with_symbol("X".to_string(), 8);
+        board.mark_with_symbol("X".to_string(), 9);
+
+        let mut player_one = Human::new("X".to_string());
+        let player_one_symbol = &player_one.symbol.borrow_mut().to_string();
+        let player_two = Computer::new("O".to_string());
+        let game = Game::new(board, Box::new(player_one), Box::new(player_two));
+        let symbol_string = format!("[{}] ", player_one_symbol.to_string());
+
+        assert_eq!(game.get_status(symbol_string), "DRAW".to_string())
     }
 }
