@@ -98,6 +98,14 @@ impl Game {
             false
         }
     }
+
+    fn get_status(&self, symbol: String) -> String {
+        if self.is_winner(symbol.clone()) {
+            format!("PLAYER_{}_WINS", symbol.clone())
+        } else {
+            format!("IN_PROGRESS")
+        }
+    }
 }
 
 
@@ -285,5 +293,50 @@ mod tests {
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
         assert_eq!(game.is_winner("[X] ".to_string()), false)
+    }
+
+    #[test]
+    fn it_returns_player_o_wins_status_if_player_o_has_won() {
+        let board = Board::new(3);
+        board.mark_with_symbol("O".to_string(), 3);
+        board.mark_with_symbol("O".to_string(), 5);
+        board.mark_with_symbol("O".to_string(), 7);
+
+        let player_one = Human::new("X".to_string());
+        let mut player_two = Computer::new("O".to_string());
+        let player_two_symbol = &player_two.symbol.borrow_mut().to_string();
+        let game = Game::new(board, Box::new(player_one), Box::new(player_two));
+        let symbol_string = format!("[{}] ", player_two_symbol.to_string());
+
+        assert_eq!(game.get_status(symbol_string), "PLAYER_[O] _WINS".to_string())
+    }
+
+    #[test]
+    fn it_returns_player_x_wins_status_if_player_x_has_won() {
+        let board = Board::new(3);
+        board.mark_with_symbol("X".to_string(), 3);
+        board.mark_with_symbol("X".to_string(), 5);
+        board.mark_with_symbol("X".to_string(), 7);
+
+        let mut player_one = Human::new("X".to_string());
+        let player_one_symbol = &player_one.symbol.borrow_mut().to_string();
+        let player_two = Computer::new("O".to_string());
+        let game = Game::new(board, Box::new(player_one), Box::new(player_two));
+        let symbol_string = format!("[{}] ", player_one_symbol.to_string());
+
+        assert_eq!(game.get_status(symbol_string), "PLAYER_[X] _WINS".to_string())
+    }
+
+    #[test]
+    fn it_returns_in_progress_status_if_the_game_is_not_over() {
+        let board = Board::new(3);
+
+        let mut player_one = Human::new("X".to_string());
+        let player_one_symbol = &player_one.symbol.borrow_mut().to_string();
+        let player_two = Computer::new("O".to_string());
+        let game = Game::new(board, Box::new(player_one), Box::new(player_two));
+        let symbol_string = format!("[{}] ", player_one_symbol.to_string());
+
+        assert_eq!(game.get_status(symbol_string), "IN_PROGRESS".to_string())
     }
 }
