@@ -1,6 +1,4 @@
 use crate::players::Human;
-use crate::players::Computer;
-use crate::players::get_player_move;
 use crate::game::Game;
 
 mod board;

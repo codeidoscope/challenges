@@ -11,6 +11,7 @@ pub struct Game {
     status: String,
     current_player: Box<Player>,
     opponent: Box<Player>,
+    current_player_move: u32,
 }
 
 impl Game {
@@ -19,8 +20,9 @@ impl Game {
         let status = String::from("IN_PROGRESS");
         let current_player = player_one;
         let opponent = player_two;
+        let current_player_move = 0;
 
-        Self { board, status, current_player, opponent }
+        Self { board, status, current_player, opponent, current_player_move }
     }
 
     fn swap_players(&mut self) {
