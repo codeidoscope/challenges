@@ -1,8 +1,8 @@
 use std::cell::RefCell;
 
 #[derive(Debug)]
-struct Tile {
-    symbol: RefCell<String>,
+pub struct Tile {
+    pub symbol: RefCell<String>,
     position: usize,
 }
 
@@ -26,7 +26,7 @@ impl Board {
         self.tiles.len()
     }
 
-    fn get_rows(&self) -> impl Iterator<Item=impl Iterator<Item=&Tile>> {
+    pub fn get_rows(&self) -> impl Iterator<Item=impl Iterator<Item=&Tile>> {
         (0..self.size).map(move |row_index| {
             let row_start = row_index * self.size;
             let row_end = row_start + self.size;
@@ -34,19 +34,19 @@ impl Board {
         })
     }
 
-    fn get_columns(&self) -> impl Iterator<Item=impl Iterator<Item=&Tile>> {
+    pub fn get_columns(&self) -> impl Iterator<Item=impl Iterator<Item=&Tile>> {
         (0..self.size).map(move |column_index| {
             (0..self.size)
                 .map(move |row_index| &self.tiles[row_index * self.size + column_index])
         })
     }
 
-    fn get_right_diagonal(&self) -> impl Iterator<Item=&Tile> {
-        (0..self.size).map(move |idx| &self.tiles[idx * self.size + idx])
+    pub fn get_right_diagonal(&self) -> impl Iterator<Item=&Tile> {
+        (0..self.size).map(move |index| &self.tiles[index * self.size + index])
     }
 
-    fn get_left_diagonal(&self) -> impl Iterator<Item=&Tile> {
-        (0..self.size).map(move |idx| &self.tiles[idx * self.size + self.size - 1 - idx])
+    pub fn get_left_diagonal(&self) -> impl Iterator<Item=&Tile> {
+        (0..self.size).map(move |index| &self.tiles[index * self.size + self.size - 1 - index])
     }
 
     pub fn mark_with_symbol(&self, symbol: String, position: u32) {

@@ -1,6 +1,10 @@
 use crate::board::Board;
 use crate::players::Player;
+use crate::board::Tile;
 use crate::board::format_board;
+use std::cell::RefCell;
+use crate::board::print_tiles;
+use core::borrow::BorrowMut;
 
 pub struct Game {
     board: Board,
@@ -36,6 +40,10 @@ impl Game {
         self.board.mark_with_symbol(player_symbol, player_move);
         self.swap_players();
     }
+
+    pub fn are_symbols_aligned<'board>(&self, board_section: &mut impl Iterator<Item=&'board Tile>, symbol: String) -> bool {
+        board_section.all(|tile| tile.symbol.borrow_mut().to_string() == RefCell::new(symbol.clone()).borrow_mut().to_string())
+    }
 }
 
 
@@ -59,5 +67,33 @@ mod tests {
 
         assert_eq!(game.current_player.get_symbol(), "O");
         assert_eq!(game.opponent.get_symbol(), "X");
+    }
+
+    #[test]
+    fn it_returns_true_if_three_symbols_are_the_same_in_a_section_of_the_board() {
+        let board = Board::new(3);
+        board.mark_with_symbol("X".to_string(), 1);
+        board.mark_with_symbol("X".to_string(), 5);
+        board.mark_with_symbol("X".to_string(), 9);
+        let player_one = Human::new("X".to_string());
+        let player_two = Computer::new("O".to_string());
+        let game = Game::new(board, Box::new(player_one), Box::new(player_two));
+        let right_diagonal = &mut game.board.get_right_diagonal();
+
+        assert_eq!(game.are_symbols_aligned(right_diagonal, "[X] ".to_string()), true)
+    }
+
+    #[test]
+    fn it_returns_false_if_three_symbols_are_not_the_same_in_a_section_of_the_board() {
+        let board = Board::new(3);
+        board.mark_with_symbol("X".to_string(), 1);
+        board.mark_with_symbol("X".to_string(), 5);
+        board.mark_with_symbol("O".to_string(), 9);
+        let player_one = Human::new("X".to_string());
+        let player_two = Computer::new("O".to_string());
+        let game = Game::new(board, Box::new(player_one), Box::new(player_two));
+        let right_diagonal = &mut game.board.get_right_diagonal();
+
+        assert_eq!(game.are_symbols_aligned(right_diagonal, "[X] ".to_string()), false)
     }
 }
