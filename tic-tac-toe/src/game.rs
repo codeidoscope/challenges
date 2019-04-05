@@ -73,6 +73,19 @@ impl Game {
             false
         }
     }
+
+    fn is_winning_diagonal(&self, symbol: String) -> bool {
+        let mut right_diagonal = self.board.get_right_diagonal();
+        let mut left_diagonal = self.board.get_left_diagonal();
+        let right_diagonal_is_winning = self.are_symbols_aligned(&mut right_diagonal, symbol.clone());
+        let left_diagonal_is_winning = self.are_symbols_aligned(&mut left_diagonal, symbol.clone());
+
+        if right_diagonal_is_winning || left_diagonal_is_winning {
+            true
+        } else {
+            false
+        }
+    }
 }
 
 
@@ -141,7 +154,7 @@ mod tests {
     }
 
     #[test]
-    fn it_returns_false_if_no_three_symbols_are_aligned_on_the_board_by_rows() {
+    fn it_returns_false_if_three_symbols_are_not_aligned_on_the_board_by_rows() {
         let board = Board::new(3);
         board.mark_with_symbol("X".to_string(), 1);
         board.mark_with_symbol("X".to_string(), 2);
@@ -169,7 +182,7 @@ mod tests {
     }
 
     #[test]
-    fn it_returns_false_if_no_three_symbols_are_aligned_on_the_board_by_columns() {
+    fn it_returns_false_if_three_symbols_are_not_aligned_on_the_board_by_columns() {
         let board = Board::new(3);
         board.mark_with_symbol("X".to_string(), 1);
         board.mark_with_symbol("X".to_string(), 4);
@@ -180,5 +193,61 @@ mod tests {
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
         assert_eq!(game.is_winning_column("[X] ".to_string()), false)
+    }
+
+    #[test]
+    fn it_returns_true_if_three_symbols_are_aligned_on_the_right_diagonal_of_the_board() {
+        let board = Board::new(3);
+        board.mark_with_symbol("X".to_string(), 1);
+        board.mark_with_symbol("X".to_string(), 5);
+        board.mark_with_symbol("X".to_string(), 9);
+
+        let player_one = Human::new("X".to_string());
+        let player_two = Computer::new("O".to_string());
+        let game = Game::new(board, Box::new(player_one), Box::new(player_two));
+
+        assert_eq!(game.is_winning_diagonal("[X] ".to_string()), true)
+    }
+
+    #[test]
+    fn it_returns_false_if_three_symbols_are_not_aligned_on_the_right_diagonal_of_the_board() {
+        let board = Board::new(3);
+        board.mark_with_symbol("X".to_string(), 1);
+        board.mark_with_symbol("X".to_string(), 5);
+        board.mark_with_symbol("O".to_string(), 9);
+
+        let player_one = Human::new("X".to_string());
+        let player_two = Computer::new("O".to_string());
+        let game = Game::new(board, Box::new(player_one), Box::new(player_two));
+
+        assert_eq!(game.is_winning_diagonal("[X] ".to_string()), false)
+    }
+
+    #[test]
+    fn it_returns_true_if_three_symbols_are_aligned_on_the_left_diagonal_of_the_board() {
+        let board = Board::new(3);
+        board.mark_with_symbol("X".to_string(), 3);
+        board.mark_with_symbol("X".to_string(), 5);
+        board.mark_with_symbol("X".to_string(), 7);
+
+        let player_one = Human::new("X".to_string());
+        let player_two = Computer::new("O".to_string());
+        let game = Game::new(board, Box::new(player_one), Box::new(player_two));
+
+        assert_eq!(game.is_winning_diagonal("[X] ".to_string()), true)
+    }
+
+    #[test]
+    fn it_returns_false_if_three_symbols_are_not_aligned_on_the_left_diagonal_of_the_board() {
+        let board = Board::new(3);
+        board.mark_with_symbol("X".to_string(), 3);
+        board.mark_with_symbol("X".to_string(), 5);
+        board.mark_with_symbol("O".to_string(), 7);
+
+        let player_one = Human::new("X".to_string());
+        let player_two = Computer::new("O".to_string());
+        let game = Game::new(board, Box::new(player_one), Box::new(player_two));
+
+        assert_eq!(game.is_winning_diagonal("[X] ".to_string()), false)
     }
 }
