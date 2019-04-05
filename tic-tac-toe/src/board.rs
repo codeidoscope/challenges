@@ -8,7 +8,7 @@ pub struct Tile {
 
 pub struct Board {
     size: usize,
-    tiles: Vec<Tile>,
+    pub tiles: Vec<Tile>,
 }
 
 impl Board {
