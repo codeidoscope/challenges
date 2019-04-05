@@ -3,7 +3,6 @@ use crate::players::Player;
 use crate::board::Tile;
 use crate::board::format_board;
 use std::cell::RefCell;
-use crate::board::print_tiles;
 use core::borrow::BorrowMut;
 
 pub struct Game {
@@ -45,6 +44,20 @@ impl Game {
 
     pub fn are_symbols_aligned<'board>(&self, board_section: &mut impl Iterator<Item=&'board Tile>, symbol: String) -> bool {
         board_section.all(|tile| tile.symbol.borrow_mut().to_string() == RefCell::new(symbol.clone()).borrow_mut().to_string())
+    }
+
+    pub fn is_winning_row(&self, symbol: String) -> bool {
+        let rows = self.board.get_rows();
+        let mut result = Vec::new();
+        for mut row in rows {
+            result.push(self.are_symbols_aligned(&mut row, symbol.clone()));
+        }
+
+        if result.contains(&true) {
+            true
+        } else {
+            false
+        }
     }
 }
 
@@ -97,5 +110,33 @@ mod tests {
         let right_diagonal = &mut game.board.get_right_diagonal();
 
         assert_eq!(game.are_symbols_aligned(right_diagonal, "[X] ".to_string()), false)
+    }
+
+    #[test]
+    fn it_returns_true_if_three_symbols_are_aligned_on_the_board_by_rows() {
+        let board = Board::new(3);
+        board.mark_with_symbol("X".to_string(), 1);
+        board.mark_with_symbol("X".to_string(), 2);
+        board.mark_with_symbol("X".to_string(), 3);
+
+        let player_one = Human::new("X".to_string());
+        let player_two = Computer::new("O".to_string());
+        let game = Game::new(board, Box::new(player_one), Box::new(player_two));
+
+        assert_eq!(game.is_winning_row("[X] ".to_string()), true)
+    }
+
+    #[test]
+    fn it_returns_false_if_no_three_symbols_are_aligned_on_the_board()  {
+        let board = Board::new(3);
+        board.mark_with_symbol("X".to_string(), 1);
+        board.mark_with_symbol("X".to_string(), 2);
+        board.mark_with_symbol("O".to_string(), 3);
+
+        let player_one = Human::new("X".to_string());
+        let player_two = Computer::new("O".to_string());
+        let game = Game::new(board, Box::new(player_one), Box::new(player_two));
+
+        assert_eq!(game.is_winning_row("[X] ".to_string()), false)
     }
 }
