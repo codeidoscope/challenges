@@ -31,7 +31,7 @@ impl Game {
 
     pub fn run(&mut self) {
         while self.get_status() == "IN_PROGRESS" {
-            print!("{}", format_board(&self.board));
+            print!("\n{}\n", format_board(&self.board));
             self.play_turn();
         }
     }
@@ -41,7 +41,7 @@ impl Game {
         let player_move = self.current_player.get_move();
         self.set_current_player_move(player_move);
         self.board.mark_with_symbol(player_symbol, player_move);
-        println!("{}", self.get_status_string());
+        println!("\n{}", self.get_status_string());
         self.swap_players();
     }
 
@@ -362,7 +362,6 @@ mod tests {
 
         let player_one = Human::new("X".to_string());
         let mut player_two = Computer::new("O".to_string());
-        let player_two_symbol = &player_two.symbol.borrow_mut().to_string();
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
         assert_eq!(game.get_status(), "PLAYER_O_WINS".to_string())
@@ -376,7 +375,6 @@ mod tests {
         board.mark_with_symbol("X".to_string(), 7);
 
         let mut player_one = Human::new("X".to_string());
-        let player_one_symbol = &player_one.symbol.borrow_mut().to_string();
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
@@ -388,7 +386,6 @@ mod tests {
         let board = Board::new(3);
 
         let mut player_one = Human::new("X".to_string());
-        let player_one_symbol = &player_one.symbol.borrow_mut().to_string();
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
@@ -409,7 +406,6 @@ mod tests {
         board.mark_with_symbol("X".to_string(), 9);
 
         let mut player_one = Human::new("X".to_string());
-        let player_one_symbol = &player_one.symbol.borrow_mut().to_string();
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
@@ -424,7 +420,6 @@ mod tests {
         board.mark_with_symbol("X".to_string(), 7);
 
         let mut player_one = Human::new("X".to_string());
-        let player_one_symbol = &player_one.symbol.borrow_mut().to_string();
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
@@ -439,7 +434,6 @@ mod tests {
         board.mark_with_symbol("O".to_string(), 7);
 
         let mut player_one = Human::new("X".to_string());
-        let player_one_symbol = &player_one.symbol.borrow_mut().to_string();
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
@@ -460,7 +454,6 @@ mod tests {
         board.mark_with_symbol("X".to_string(), 9);
 
         let mut player_one = Human::new("X".to_string());
-        let player_one_symbol = &player_one.symbol.borrow_mut().to_string();
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
@@ -472,7 +465,6 @@ mod tests {
         let board = Board::new(3);
 
         let mut player_one = Human::new("X".to_string());
-        let player_one_symbol = &player_one.symbol.borrow_mut().to_string();
         let player_two = Computer::new("O".to_string());
         let mut game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
