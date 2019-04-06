@@ -4,13 +4,14 @@ use crate::board::Tile;
 use crate::board::format_board;
 use std::cell::RefCell;
 use core::borrow::BorrowMut;
+use std::cell::Cell;
 
 pub struct Game {
     board: Board,
     status: String,
     current_player: Box<Player>,
     opponent: Box<Player>,
-    current_player_move: u32,
+    current_player_move: Cell<u32>,
 }
 
 impl Game {
@@ -19,7 +20,7 @@ impl Game {
         let status = String::from("IN_PROGRESS");
         let current_player = player_one;
         let opponent = player_two;
-        let current_player_move = 0;
+        let mut current_player_move = Cell::new(0);
 
         Self { board, status, current_player, opponent, current_player_move }
     }
@@ -38,7 +39,9 @@ impl Game {
     fn play_turn(&mut self) {
         let player_symbol = self.current_player.get_symbol().to_string();
         let player_move = self.current_player.get_move();
+        self.set_current_player_move(player_move);
         self.board.mark_with_symbol(player_symbol, player_move);
+        println!("{}", self.get_status_string());
         self.swap_players();
     }
 
@@ -109,6 +112,26 @@ impl Game {
         } else {
             format!("IN_PROGRESS")
         }
+    }
+
+    fn get_status_string(&self) -> String {
+        let status = self.get_status();
+        let current_player = &format!("{}", self.current_player.get_symbol());
+        let opponent = &format!("{}", self.opponent.get_symbol());
+
+        if status == format!("PLAYER_{}_WINS", current_player) {
+            format!("Player {} wins!", current_player)
+        } else if status == format!("PLAYER_{}_WINS", opponent) {
+            format!("Player {} wins!", opponent)
+        } else if status == "DRAW" {
+            "It's a draw :(".to_string()
+        } else {
+            format!("Player {} played in position {}", current_player, self.current_player_move.get())
+        }
+    }
+
+    fn set_current_player_move(&mut self, player_move: u32) {
+        self.current_player_move = Cell::new(player_move);
     }
 }
 
@@ -389,8 +412,72 @@ mod tests {
         let player_one_symbol = &player_one.symbol.borrow_mut().to_string();
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
-        let symbol_string = format!("[{}] ", player_one_symbol.to_string());
 
         assert_eq!(game.get_status(), "DRAW".to_string())
+    }
+
+    #[test]
+    fn it_returns_player_x_wins_string_when_player_x_is_winner() {
+        let board = Board::new(3);
+        board.mark_with_symbol("X".to_string(), 3);
+        board.mark_with_symbol("X".to_string(), 5);
+        board.mark_with_symbol("X".to_string(), 7);
+
+        let mut player_one = Human::new("X".to_string());
+        let player_one_symbol = &player_one.symbol.borrow_mut().to_string();
+        let player_two = Computer::new("O".to_string());
+        let game = Game::new(board, Box::new(player_one), Box::new(player_two));
+
+        assert_eq!(game.get_status_string(), "Player X wins!")
+    }
+
+    #[test]
+    fn it_returns_player_o_wins_string_when_player_o_is_winner() {
+        let board = Board::new(3);
+        board.mark_with_symbol("O".to_string(), 3);
+        board.mark_with_symbol("O".to_string(), 5);
+        board.mark_with_symbol("O".to_string(), 7);
+
+        let mut player_one = Human::new("X".to_string());
+        let player_one_symbol = &player_one.symbol.borrow_mut().to_string();
+        let player_two = Computer::new("O".to_string());
+        let game = Game::new(board, Box::new(player_one), Box::new(player_two));
+
+        assert_eq!(game.get_status_string(), "Player O wins!")
+    }
+
+    #[test]
+    fn it_returns_it_is_a_draw_string_when_there_is_no_winner() {
+        let board = Board::new(3);
+        board.mark_with_symbol("O".to_string(), 1);
+        board.mark_with_symbol("O".to_string(), 2);
+        board.mark_with_symbol("X".to_string(), 3);
+        board.mark_with_symbol("X".to_string(), 4);
+        board.mark_with_symbol("X".to_string(), 5);
+        board.mark_with_symbol("O".to_string(), 6);
+        board.mark_with_symbol("O".to_string(), 7);
+        board.mark_with_symbol("X".to_string(), 8);
+        board.mark_with_symbol("X".to_string(), 9);
+
+        let mut player_one = Human::new("X".to_string());
+        let player_one_symbol = &player_one.symbol.borrow_mut().to_string();
+        let player_two = Computer::new("O".to_string());
+        let game = Game::new(board, Box::new(player_one), Box::new(player_two));
+
+        assert_eq!(game.get_status_string(), "It's a draw :(")
+    }
+
+    #[test]
+    fn it_returns_player_x_played_in_position_when_game_is_in_progress() {
+        let board = Board::new(3);
+
+        let mut player_one = Human::new("X".to_string());
+        let player_one_symbol = &player_one.symbol.borrow_mut().to_string();
+        let player_two = Computer::new("O".to_string());
+        let mut game = Game::new(board, Box::new(player_one), Box::new(player_two));
+
+        game.set_current_player_move(5);
+
+        assert_eq!(game.get_status_string(), "Player X played in position 5")
     }
 }
