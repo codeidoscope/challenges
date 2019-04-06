@@ -88,7 +88,7 @@ impl Game {
         for tile in &self.board.tiles {
             let tile_symbol = tile.symbol.borrow_mut().to_string();
 
-            if tile_symbol == "[X] ".to_string() || tile_symbol == "[O] ".to_string() {
+            if tile_symbol == "X".to_string() || tile_symbol == "O".to_string() {
                 result.push(true)
             } else {
                 result.push(false)
@@ -98,8 +98,8 @@ impl Game {
     }
 
     fn get_status(&self) -> String {
-        let current_player = &format!("[{}] ", self.current_player.get_symbol());
-        let opponent = &format!("[{}] ", self.opponent.get_symbol());
+        let current_player = &format!("{}", self.current_player.get_symbol());
+        let opponent = &format!("{}", self.opponent.get_symbol());
         if self.is_winner(current_player) {
             format!("PLAYER_{}_WINS", current_player)
         } else if self.is_winner(opponent) {
@@ -147,7 +147,7 @@ mod tests {
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
         let right_diagonal = &mut game.board.get_right_diagonal();
 
-        assert_eq!(game.are_symbols_aligned(right_diagonal, "[X] ".to_string()), true)
+        assert_eq!(game.are_symbols_aligned(right_diagonal, "X".to_string()), true)
     }
 
     #[test]
@@ -161,7 +161,7 @@ mod tests {
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
         let right_diagonal = &mut game.board.get_right_diagonal();
 
-        assert_eq!(game.are_symbols_aligned(right_diagonal, "[X] ".to_string()), false)
+        assert_eq!(game.are_symbols_aligned(right_diagonal, "X".to_string()), false)
     }
 
     #[test]
@@ -175,7 +175,7 @@ mod tests {
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
-        assert_eq!(game.is_winning_row("[X] ".to_string()), true)
+        assert_eq!(game.is_winning_row("X".to_string()), true)
     }
 
     #[test]
@@ -189,7 +189,7 @@ mod tests {
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
-        assert_eq!(game.is_winning_row("[X] ".to_string()), false)
+        assert_eq!(game.is_winning_row("X".to_string()), false)
     }
 
     #[test]
@@ -203,7 +203,7 @@ mod tests {
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
-        assert_eq!(game.is_winning_column("[X] ".to_string()), true)
+        assert_eq!(game.is_winning_column("X".to_string()), true)
     }
 
     #[test]
@@ -217,7 +217,7 @@ mod tests {
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
-        assert_eq!(game.is_winning_column("[X] ".to_string()), false)
+        assert_eq!(game.is_winning_column("X".to_string()), false)
     }
 
     #[test]
@@ -231,7 +231,7 @@ mod tests {
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
-        assert_eq!(game.is_winning_diagonal("[X] ".to_string()), true)
+        assert_eq!(game.is_winning_diagonal("X".to_string()), true)
     }
 
     #[test]
@@ -245,7 +245,7 @@ mod tests {
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
-        assert_eq!(game.is_winning_diagonal("[X] ".to_string()), false)
+        assert_eq!(game.is_winning_diagonal("X".to_string()), false)
     }
 
     #[test]
@@ -259,7 +259,7 @@ mod tests {
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
-        assert_eq!(game.is_winning_diagonal("[X] ".to_string()), true)
+        assert_eq!(game.is_winning_diagonal("X".to_string()), true)
     }
 
     #[test]
@@ -273,7 +273,7 @@ mod tests {
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
-        assert_eq!(game.is_winning_diagonal("[X] ".to_string()), false)
+        assert_eq!(game.is_winning_diagonal("X".to_string()), false)
     }
 
     #[test]
@@ -287,7 +287,7 @@ mod tests {
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
-        assert_eq!(game.is_winner(&"[X] ".to_string()), true)
+        assert_eq!(game.is_winner(&"X".to_string()), true)
     }
 
     #[test]
@@ -297,7 +297,7 @@ mod tests {
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
-        assert_eq!(game.is_winner(&"[X] ".to_string()), false)
+        assert_eq!(game.is_winner(&"X".to_string()), false)
     }
 
     #[test]
@@ -341,9 +341,8 @@ mod tests {
         let mut player_two = Computer::new("O".to_string());
         let player_two_symbol = &player_two.symbol.borrow_mut().to_string();
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
-        let symbol_string = format!("[{}] ", player_two_symbol.to_string());
 
-        assert_eq!(game.get_status(), "PLAYER_[O] _WINS".to_string())
+        assert_eq!(game.get_status(), "PLAYER_O_WINS".to_string())
     }
 
     #[test]
@@ -357,9 +356,8 @@ mod tests {
         let player_one_symbol = &player_one.symbol.borrow_mut().to_string();
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
-        let symbol_string = format!("[{}] ", player_one_symbol.to_string());
 
-        assert_eq!(game.get_status(), "PLAYER_[X] _WINS".to_string())
+        assert_eq!(game.get_status(), "PLAYER_X_WINS".to_string())
     }
 
     #[test]
@@ -370,7 +368,6 @@ mod tests {
         let player_one_symbol = &player_one.symbol.borrow_mut().to_string();
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
-        let symbol_string = format!("[{}] ", player_one_symbol.to_string());
 
         assert_eq!(game.get_status(), "IN_PROGRESS".to_string())
     }

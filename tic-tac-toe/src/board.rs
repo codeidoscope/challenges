@@ -16,7 +16,7 @@ impl Board {
         let mut tiles: Vec<Tile> = Vec::new();
 
         for i in 0..size * size {
-            tiles.push(Tile { symbol: RefCell::new(format!("[{}] ", i + 1)), position: i })
+            tiles.push(Tile { symbol: RefCell::new(format!("{}", i + 1)), position: i })
         }
 
         Self { size, tiles }
@@ -51,13 +51,13 @@ impl Board {
 
     pub fn mark_with_symbol(&self, symbol: String, position: u32) {
         let position_index = position - 1;
-        self.tiles[position_index as usize].symbol.replace(format!("[{}] ", symbol));
+        self.tiles[position_index as usize].symbol.replace(format!("{}", symbol));
     }
 
     fn is_position_occupied(&self, position: u32) -> bool {
         let position_index = position - 1;
         let tile_symbol = self.tiles[position_index as usize].symbol.borrow_mut().to_string();
-        if tile_symbol == "[X] " || tile_symbol == "[O] " {
+        if tile_symbol == "X" || tile_symbol == "O" {
             true
         } else {
             false
@@ -81,7 +81,7 @@ fn section_to_string<'board>(board_section: impl Iterator<Item=impl Iterator<Ite
 }
 
 fn tiles_to_string<'board>(tiles: impl Iterator<Item=&'board Tile>) -> String {
-    let tiles_as_string = tiles.map(|tile| tile.symbol.borrow_mut().to_string())
+    let tiles_as_string = tiles.map(|tile| format!("[{}] ", tile.symbol.borrow_mut().to_string()))
         .collect::<String>();
     tiles_as_string
 }
@@ -166,11 +166,11 @@ mod tests {
         let board = Board::new(3);
         let player = Human::new("X".to_string());
 
-        assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "[3] ");
+        assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "3");
 
         board.mark_with_symbol(player.symbol, 3);
 
-        assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "[X] ");
+        assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "X");
         assert_eq!(format_board(&board), "[1] [2] [X] \n\
                                           [4] [5] [6] \n\
                                           [7] [8] [9] \n");
