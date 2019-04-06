@@ -3,6 +3,7 @@ use crate::players::Player;
 use crate::board::Tile;
 use crate::board::format_board;
 use std::cell::RefCell;
+use core::borrow::BorrowMut;
 
 pub struct Game {
     board: Board,
@@ -28,7 +29,7 @@ impl Game {
     }
 
     pub fn run(&mut self) {
-        while self.status == "IN_PROGRESS" {
+        while self.get_status() == "IN_PROGRESS" {
             print!("{}", format_board(&self.board));
             self.play_turn();
         }
@@ -74,7 +75,7 @@ impl Game {
         right_diagonal_is_winning || left_diagonal_is_winning
     }
 
-    fn is_winner(&self, symbol: String) -> bool {
+    fn is_winner(&self, symbol: &String) -> bool {
         let row_is_winning = self.is_winning_row(symbol.clone());
         let column_is_winning = self.is_winning_column(symbol.clone());
         let diagonal_is_winning = self.is_winning_diagonal(symbol.clone());
@@ -86,18 +87,23 @@ impl Game {
         let mut result = Vec::new();
         for tile in &self.board.tiles {
             let tile_symbol = tile.symbol.borrow_mut().to_string();
+
             if tile_symbol == "[X] ".to_string() || tile_symbol == "[O] ".to_string() {
                 result.push(true)
             } else {
                 result.push(false)
             }
         }
-        result.contains(&true)
+        result.iter().all(|item| item == &true)
     }
 
-    fn get_status(&self, symbol: String) -> String {
-        if self.is_winner(symbol.clone()) {
-            format!("PLAYER_{}_WINS", symbol.clone())
+    fn get_status(&self) -> String {
+        let current_player = &format!("[{}] ", self.current_player.get_symbol());
+        let opponent = &format!("[{}] ", self.opponent.get_symbol());
+        if self.is_winner(current_player) {
+            format!("PLAYER_{}_WINS", current_player)
+        } else if self.is_winner(opponent) {
+            format!("PLAYER_{}_WINS", opponent)
         } else if self.is_full() {
             format!("DRAW")
         } else {
@@ -281,7 +287,7 @@ mod tests {
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
-        assert_eq!(game.is_winner("[X] ".to_string()), true)
+        assert_eq!(game.is_winner(&"[X] ".to_string()), true)
     }
 
     #[test]
@@ -291,7 +297,7 @@ mod tests {
         let player_two = Computer::new("O".to_string());
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
 
-        assert_eq!(game.is_winner("[X] ".to_string()), false)
+        assert_eq!(game.is_winner(&"[X] ".to_string()), false)
     }
 
     #[test]
@@ -337,7 +343,7 @@ mod tests {
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
         let symbol_string = format!("[{}] ", player_two_symbol.to_string());
 
-        assert_eq!(game.get_status(symbol_string), "PLAYER_[O] _WINS".to_string())
+        assert_eq!(game.get_status(), "PLAYER_[O] _WINS".to_string())
     }
 
     #[test]
@@ -353,7 +359,7 @@ mod tests {
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
         let symbol_string = format!("[{}] ", player_one_symbol.to_string());
 
-        assert_eq!(game.get_status(symbol_string), "PLAYER_[X] _WINS".to_string())
+        assert_eq!(game.get_status(), "PLAYER_[X] _WINS".to_string())
     }
 
     #[test]
@@ -366,7 +372,7 @@ mod tests {
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
         let symbol_string = format!("[{}] ", player_one_symbol.to_string());
 
-        assert_eq!(game.get_status(symbol_string), "IN_PROGRESS".to_string())
+        assert_eq!(game.get_status(), "IN_PROGRESS".to_string())
     }
 
     #[test]
@@ -388,6 +394,6 @@ mod tests {
         let game = Game::new(board, Box::new(player_one), Box::new(player_two));
         let symbol_string = format!("[{}] ", player_one_symbol.to_string());
 
-        assert_eq!(game.get_status(symbol_string), "DRAW".to_string())
+        assert_eq!(game.get_status(), "DRAW".to_string())
     }
 }
