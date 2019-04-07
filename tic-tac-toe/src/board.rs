@@ -54,14 +54,25 @@ impl Board {
         self.tiles[position_index].symbol.replace(format!("{}", symbol));
     }
 
-    fn is_position_occupied(&self, position: u32) -> bool {
-        let position_index = position - 1;
-        let tile_symbol = self.tiles[position_index as usize].symbol.borrow_mut().to_string();
-        if tile_symbol == "X" || tile_symbol == "O" {
-            true
-        } else {
-            false
+    pub fn is_position_occupied(&self, position: usize) -> bool {
+        let position_index = position;
+        let tile_symbol = self.tiles[position_index].symbol.borrow_mut().to_string();
+
+        tile_symbol == "X" || tile_symbol == "O"
+    }
+
+    pub fn get_empty_tiles(&self) -> Vec<usize> {
+        let tiles = self.tiles.iter();
+        let mut empty_tiles = Vec::new();
+
+        for tile in tiles {
+            if self.is_position_occupied(tile.position) == false {
+                empty_tiles.push(tile.position);
+            } else {
+                ()
+            }
         }
+        empty_tiles
     }
 }
 
@@ -179,12 +190,24 @@ mod tests {
     fn it_return_true_if_the_position_is_occupied() {
         let board = Board::new(3);
         board.mark_with_symbol("X".to_string(), 5);
-        assert_eq!(board.is_position_occupied(5), true);
+        assert_eq!(board.is_position_occupied(4), true);
     }
 
     #[test]
     fn it_return_false_if_the_position_is_not_occupied() {
         let board = Board::new(3);
         assert_eq!(board.is_position_occupied(6), false);
+    }
+
+    #[test]
+    fn it_returns_a_list_of_empty_tiles_positions() {
+        let board = Board::new(3);
+        board.mark_with_symbol("X".to_string(), 1);
+        board.mark_with_symbol("X".to_string(), 2);
+        board.mark_with_symbol("X".to_string(), 3);
+        board.mark_with_symbol("X".to_string(), 4);
+        board.mark_with_symbol("X".to_string(), 5);
+
+        assert_eq!(board.get_empty_tiles(), [5, 6, 7, 8])
     }
 }
