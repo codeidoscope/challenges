@@ -1,6 +1,7 @@
 use std::io;
 use std::io::Write;
 use std::num::ParseIntError;
+use crate::board::Board;
 
 pub trait Player {
     fn get_move(&self) -> usize;
@@ -51,14 +52,18 @@ impl Player for Computer {
 }
 
 impl Human {
-    pub fn new(sym: String) -> Self {
-        Human { symbol: sym }
+    pub fn new(player_symbol: String) -> Self {
+        Human { symbol: player_symbol }
     }
 }
 
 impl Computer {
-    pub fn new(sym: String) -> Self {
-        Computer { symbol: sym }
+    pub fn new(player_symbol: String) -> Self {
+        Computer { symbol: player_symbol }
+    }
+
+    fn calculate_score(self, board: Board, depth: usize) {
+
     }
 }
 

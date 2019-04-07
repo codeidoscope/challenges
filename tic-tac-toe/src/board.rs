@@ -49,7 +49,7 @@ impl Board {
         (0..self.size).map(move |index| &self.tiles[index * self.size + self.size - 1 - index])
     }
 
-    pub fn mark_with_symbol(&self, symbol: String, position: usize) {
+    pub fn mark_with_symbol(&self, symbol: &String, position: usize) {
         let position_index = position - 1;
         self.tiles[position_index].symbol.replace(format!("{}", symbol));
     }
@@ -178,7 +178,7 @@ mod tests {
 
         assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "3");
 
-        board.mark_with_symbol(player.symbol, 3);
+        board.mark_with_symbol(&player.symbol, 3);
 
         assert_eq!(board.tiles[2].symbol.borrow_mut().to_string(), "X");
         assert_eq!(format_board(&board), "[1] [2] [X] \n\
@@ -189,7 +189,7 @@ mod tests {
     #[test]
     fn it_return_true_if_the_position_is_occupied() {
         let board = Board::new(3);
-        board.mark_with_symbol("X".to_string(), 5);
+        board.mark_with_symbol(&"X".to_string(), 5);
         assert_eq!(board.is_position_occupied(4), true);
     }
 
@@ -202,11 +202,11 @@ mod tests {
     #[test]
     fn it_returns_a_list_of_empty_tiles_positions() {
         let board = Board::new(3);
-        board.mark_with_symbol("X".to_string(), 1);
-        board.mark_with_symbol("X".to_string(), 2);
-        board.mark_with_symbol("X".to_string(), 3);
-        board.mark_with_symbol("X".to_string(), 4);
-        board.mark_with_symbol("X".to_string(), 5);
+        board.mark_with_symbol(&"X".to_string(), 1);
+        board.mark_with_symbol(&"X".to_string(), 2);
+        board.mark_with_symbol(&"X".to_string(), 3);
+        board.mark_with_symbol(&"X".to_string(), 4);
+        board.mark_with_symbol(&"X".to_string(), 5);
 
         assert_eq!(board.get_empty_tiles(), [5, 6, 7, 8])
     }
