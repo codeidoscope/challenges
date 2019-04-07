@@ -11,7 +11,7 @@ pub struct Game {
     status: String,
     current_player: Box<Player>,
     opponent: Box<Player>,
-    current_player_move: Cell<u32>,
+    current_player_move: Cell<usize>,
 }
 
 impl Game {
@@ -130,9 +130,10 @@ impl Game {
         }
     }
 
-    fn set_current_player_move(&mut self, player_move: u32) {
+    fn set_current_player_move(&mut self, player_move: usize) {
         self.current_player_move = Cell::new(player_move);
     }
+
 }
 
 
@@ -141,7 +142,6 @@ mod tests {
     use super::*;
     use crate::players::Human;
     use crate::players::Computer;
-    use core::borrow::BorrowMut;
 
     #[test]
     fn it_swaps_two_players() {

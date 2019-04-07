@@ -3,11 +3,11 @@ use std::io::Write;
 use std::num::ParseIntError;
 
 pub trait Player {
-    fn get_move(&self) -> u32;
+    fn get_move(&self) -> usize;
     fn get_symbol(&self) -> &String;
 }
 
-pub fn get_player_move<T: Player>(player: T) -> u32 {
+pub fn get_player_move<T: Player>(player: T) -> usize {
     player.get_move()
 }
 
@@ -20,7 +20,7 @@ pub struct Computer {
 }
 
 impl Player for Human {
-    fn get_move(&self) -> u32 {
+    fn get_move(&self) -> usize {
         loop {
             println!("Select a position between 1 and 9: ");
             io::stdout().flush().expect("Failed to flush stdout");
@@ -40,7 +40,7 @@ impl Player for Human {
 }
 
 impl Player for Computer {
-    fn get_move(&self) -> u32 {
+    fn get_move(&self) -> usize {
         // TODO: Implement computer player
         4
     }
@@ -69,12 +69,12 @@ fn read_input() -> String {
     input
 }
 
-fn is_numeric(input: &str) -> Result<u32, ParseIntError> {
-    let input = input.trim().parse::<u32>()?;
+fn is_numeric(input: &str) -> Result<usize, ParseIntError> {
+    let input = input.trim().parse::<usize>()?;
     Ok(input)
 }
 
-fn is_in_range(input: u32) -> bool {
+fn is_in_range(input: usize) -> bool {
     if input >= 1 && input <= 9 { true } else { false }
 }
 

@@ -49,9 +49,9 @@ impl Board {
         (0..self.size).map(move |index| &self.tiles[index * self.size + self.size - 1 - index])
     }
 
-    pub fn mark_with_symbol(&self, symbol: String, position: u32) {
+    pub fn mark_with_symbol(&self, symbol: String, position: usize) {
         let position_index = position - 1;
-        self.tiles[position_index as usize].symbol.replace(format!("{}", symbol));
+        self.tiles[position_index].symbol.replace(format!("{}", symbol));
     }
 
     fn is_position_occupied(&self, position: u32) -> bool {
@@ -91,7 +91,6 @@ pub fn print_tiles<'board>(tiles: impl Iterator<Item=&'board Tile>) {
         .collect::<String>();
     println!("{}", formatted_tiles)
 }
-
 
 #[cfg(test)]
 mod tests {
