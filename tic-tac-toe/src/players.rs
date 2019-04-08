@@ -80,6 +80,13 @@ impl Computer {
         } else {
             0
         }
+
+//        match status {
+//            Some(computer_wins) => 10 + depth,
+//            Some(computer_loses) => -10 + depth,
+//            Some(draw) => 0,
+//            None => 0,
+//        }
     }
 
     fn is_game_draw(&self, board: &Board) -> bool {
