@@ -13,11 +13,12 @@ grown as a developer I now have a few points I can expand and improve on.
 
 
 ## Changes made
+
 - I am shortening this article to around 1000 words, which gives me space
 to discuss strategies, but forces me to keep the rambling at bay.
 
-- I am rethinking the strategies that I talk about, and adding details that are
-more technically centred.
+- I am condensing the strategies that I talk about, and adding details on how
+they can help in tech.
 
 - I am also making it less personal, so that it can be relatable to more people,
 which I believe will make it easier to read and enjoy.
