@@ -30,6 +30,8 @@ a position that is already occupied
 I would like to revisit it and apply a more functional approach
 - [ ] I do not have integration tests yet
 - [ ] I am also not testing I/O capture.
+- [ ] With more time, it would have been nice to implement a test helper to create a board from
+a string, instead of marking each tile individually.
 
 
 ## Decisions and compromises made
