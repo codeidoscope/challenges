@@ -1,15 +1,13 @@
+extern crate rand;
+
+use self::rand::Rng;
 use std::io;
 use std::io::Write;
 use std::num::ParseIntError;
-use crate::board::Board;
 
 pub trait Player {
-    fn get_move(&self) -> usize;
+    fn get_move(&self, empty_positions: Vec<usize>) -> usize;
     fn get_symbol(&self) -> &String;
-}
-
-pub fn get_player_move<T: Player>(player: T) -> usize {
-    player.get_move()
 }
 
 pub struct Human {
@@ -21,16 +19,16 @@ pub struct Computer {
 }
 
 impl Player for Human {
-    fn get_move(&self) -> usize {
+    fn get_move(&self, empty_positions: Vec<usize>) -> usize {
         loop {
             println!("Select a position between 1 and 9: ");
             io::stdout().flush().expect("Failed to flush stdout");
             let input = read_input();
             match is_numeric(&input) {
-                Ok(input) if is_in_range(input) => break input,
-                _ => eprintln!(
-                    "Invalid position. Please select a position between 1 and 9.",
-                )
+                Ok(input) if is_in_range(input) && is_empty_position(&empty_positions, input) => {
+                    break input;
+                }
+                _ => eprintln!("Invalid position. Please select a position between 1 and 9.", ),
             }
         }
     }
@@ -41,9 +39,13 @@ impl Player for Human {
 }
 
 impl Player for Computer {
-    fn get_move(&self) -> usize {
-        // TODO: Implement computer player
-        4
+    fn get_move(&self, empty_positions: Vec<usize>) -> usize {
+        let mut position = 0 as usize;
+        while !empty_positions.contains(&position) {
+            let mut rng = rand::thread_rng();
+            position = rng.gen_range(1, 10);
+        }
+        position
     }
 
     fn get_symbol(&self) -> &String {
@@ -53,20 +55,19 @@ impl Player for Computer {
 
 impl Human {
     pub fn new(player_symbol: String) -> Self {
-        Human { symbol: player_symbol }
+        Human {
+            symbol: player_symbol,
+        }
     }
 }
 
 impl Computer {
     pub fn new(player_symbol: String) -> Self {
-        Computer { symbol: player_symbol }
-    }
-
-    fn calculate_score(self, board: Board, depth: usize) {
-
+        Computer {
+            symbol: player_symbol,
+        }
     }
 }
-
 
 fn read_input() -> String {
     let mut input = String::new();
@@ -80,7 +81,11 @@ fn is_numeric(input: &str) -> Result<usize, ParseIntError> {
 }
 
 fn is_in_range(input: usize) -> bool {
-    if input >= 1 && input <= 9 { true } else { false }
+    input >= 1 && input <= 9
+}
+
+fn is_empty_position(empty_positions: &[usize], chosen_position: usize) -> bool {
+    empty_positions.contains(&chosen_position)
 }
 
 #[cfg(test)]

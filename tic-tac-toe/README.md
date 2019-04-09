@@ -19,18 +19,16 @@ followed the installation instructions given on the
 - [x] 3x3 board
 - [x] Human player (X)
 - [x] Human VS Human game
+- [x] Simple Computer player (O)
 - [ ] Unbeatable Computer player (O)
 - [x] Input validation
 
 ## Areas for improvement
-- [ ] There is currently no validation check for a human player trying to select
-a position that is already occupied
 - [ ] The game status are currently strings, they could be made into Enums
 - [ ] The logic implemented to check a winner is very clunky and inelegant and
 I would like to revisit it and apply a more functional approach
 - [ ] I do not have integration tests yet
 - [ ] I am also not testing I/O capture.
-
 
 ## Decisions and compromises made
 
@@ -53,5 +51,5 @@ is the decision I made when implementing this.
 
 - Some of the tests can appear oddly organised, with variables created before or after objects
 are instantiated. This is because of the mutability and ownership constraints set by Rust. It
-is a shift to think about these concepts while coding, and ten days is not long enough to master
+is a shift to think about these concepts while coding, and ten days has not been long enough to master
 them.
