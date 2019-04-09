@@ -51,5 +51,5 @@ is the decision I made when implementing this.
 
 - Some of the tests can appear oddly organised, with variables created before or after objects
 are instantiated. This is because of the mutability and ownership constraints set by Rust. It
-is a shift to think about these concepts while coding, and ten days has not been long enough to master
+is a shift to think about these concepts while coding, and ten days has not been long enough for me to master
 them.

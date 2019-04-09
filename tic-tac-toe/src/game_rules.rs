@@ -126,8 +126,6 @@ mod tests {
         board.mark_with_symbol(&"X".to_string(), 5);
         board.mark_with_symbol(&"X".to_string(), 9);
         let right_diagonal = &mut board.get_right_diagonal();
-        let player_one = Human::new("X".to_string());
-        let player_two = Computer::new("O".to_string());
         let game_rules = GameRules::new();
 
         assert_eq!(
@@ -143,8 +141,6 @@ mod tests {
         board.mark_with_symbol(&"X".to_string(), 5);
         board.mark_with_symbol(&"O".to_string(), 9);
         let right_diagonal = &mut board.get_right_diagonal();
-        let player_one = Human::new("X".to_string());
-        let player_two = Computer::new("O".to_string());
         let game_rules = GameRules::new();
 
         assert_eq!(
@@ -160,9 +156,6 @@ mod tests {
         board.mark_with_symbol(&"X".to_string(), 2);
         board.mark_with_symbol(&"X".to_string(), 3);
         let board_rows = board.get_rows();
-
-        let player_one = Human::new("X".to_string());
-        let player_two = Computer::new("O".to_string());
         let game_rules = GameRules::new();
 
         assert_eq!(
@@ -178,9 +171,6 @@ mod tests {
         board.mark_with_symbol(&"X".to_string(), 2);
         board.mark_with_symbol(&"O".to_string(), 3);
         let board_rows = board.get_rows();
-
-        let player_one = Human::new("X".to_string());
-        let player_two = Computer::new("O".to_string());
         let game_rules = GameRules::new();
 
         assert_eq!(
@@ -196,9 +186,6 @@ mod tests {
         board.mark_with_symbol(&"X".to_string(), 4);
         board.mark_with_symbol(&"X".to_string(), 7);
         let board_columns = board.get_columns();
-
-        let player_one = Human::new("X".to_string());
-        let player_two = Computer::new("O".to_string());
         let game_rules = GameRules::new();
 
         assert_eq!(
@@ -214,9 +201,6 @@ mod tests {
         board.mark_with_symbol(&"X".to_string(), 4);
         board.mark_with_symbol(&"O".to_string(), 7);
         let board_columns = board.get_columns();
-
-        let player_one = Human::new("X".to_string());
-        let player_two = Computer::new("O".to_string());
         let game_rules = GameRules::new();
 
         assert_eq!(
@@ -233,9 +217,6 @@ mod tests {
         board.mark_with_symbol(&"X".to_string(), 9);
         let mut right_board_diagonal = board.get_right_diagonal();
         let mut left_board_diagonal = board.get_left_diagonal();
-
-        let player_one = Human::new("X".to_string());
-        let player_two = Computer::new("O".to_string());
         let game_rules = GameRules::new();
 
         assert_eq!(
@@ -256,9 +237,6 @@ mod tests {
         board.mark_with_symbol(&"O".to_string(), 9);
         let mut right_board_diagonal = board.get_right_diagonal();
         let mut left_board_diagonal = board.get_left_diagonal();
-
-        let player_one = Human::new("X".to_string());
-        let player_two = Computer::new("O".to_string());
         let game_rules = GameRules::new();
 
         assert_eq!(
@@ -279,9 +257,6 @@ mod tests {
         board.mark_with_symbol(&"X".to_string(), 7);
         let mut right_board_diagonal = board.get_right_diagonal();
         let mut left_board_diagonal = board.get_left_diagonal();
-
-        let player_one = Human::new("X".to_string());
-        let player_two = Computer::new("O".to_string());
         let game_rules = GameRules::new();
 
         assert_eq!(
@@ -302,9 +277,6 @@ mod tests {
         board.mark_with_symbol(&"O".to_string(), 7);
         let mut right_board_diagonal = board.get_right_diagonal();
         let mut left_board_diagonal = board.get_left_diagonal();
-
-        let player_one = Human::new("X".to_string());
-        let player_two = Computer::new("O".to_string());
         let game_rules = GameRules::new();
 
         assert_eq!(
@@ -323,9 +295,6 @@ mod tests {
         board.mark_with_symbol(&"X".to_string(), 3);
         board.mark_with_symbol(&"X".to_string(), 5);
         board.mark_with_symbol(&"X".to_string(), 7);
-
-        let player_one = Human::new("X".to_string());
-        let player_two = Computer::new("O".to_string());
         let game_rules = GameRules::new();
 
         assert_eq!(game_rules.is_winner(&board, &"X".to_string()), true)
@@ -334,8 +303,6 @@ mod tests {
     #[test]
     fn it_returns_true_if_there_if_three_symbols_are_not_aligned_on_the_board() {
         let board = Board::new(3);
-        let player_one = Human::new("X".to_string());
-        let player_two = Computer::new("O".to_string());
         let game_rules = GameRules::new();
 
         assert_eq!(game_rules.is_winner(&board, &"X".to_string()), false)
@@ -353,9 +320,6 @@ mod tests {
         board.mark_with_symbol(&"X".to_string(), 7);
         board.mark_with_symbol(&"O".to_string(), 8);
         board.mark_with_symbol(&"X".to_string(), 9);
-
-        let player_one = Human::new("X".to_string());
-        let player_two = Computer::new("O".to_string());
         let game_rules = GameRules::new();
 
         assert_eq!(game_rules.is_full(&board), true);
@@ -364,8 +328,6 @@ mod tests {
     #[test]
     fn it_return_false_if_the_board_is_not_full() {
         let board = Board::new(3);
-        let player_one = Human::new("X".to_string());
-        let player_two = Computer::new("O".to_string());
         let game_rules = GameRules::new();
 
         assert_eq!(game_rules.is_full(&board), false);
