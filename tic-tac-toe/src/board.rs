@@ -1,5 +1,5 @@
-use std::cell::RefCell;
 use crate::test_helpers::populate_board;
+use std::cell::RefCell;
 
 #[derive(Debug, Clone)]
 pub struct Tile {
@@ -28,12 +28,16 @@ impl Board {
 
     pub fn clone(self, board: Board) -> Board {
         let new_board = Board::new(3);
-        let board_string = board.tiles.iter().map(|tile| format!("{} ", tile.symbol.borrow_mut().to_string())).collect::<String>();
+        let board_string = board
+            .tiles
+            .iter()
+            .map(|tile| format!("{} ", tile.symbol.borrow_mut().to_string()))
+            .collect::<String>();
         populate_board(&new_board, board_string);
         new_board
     }
 
-    pub fn get_rows(&self) -> impl Iterator<Item=impl Iterator<Item=&Tile>> {
+    pub fn get_rows(&self) -> impl Iterator<Item = impl Iterator<Item = &Tile>> {
         (0..self.size).map(move |row_index| {
             let row_start = row_index * self.size;
             let row_end = row_start + self.size;
@@ -41,17 +45,17 @@ impl Board {
         })
     }
 
-    pub fn get_columns(&self) -> impl Iterator<Item=impl Iterator<Item=&Tile>> {
+    pub fn get_columns(&self) -> impl Iterator<Item = impl Iterator<Item = &Tile>> {
         (0..self.size).map(move |column_index| {
             (0..self.size).map(move |row_index| &self.tiles[row_index * self.size + column_index])
         })
     }
 
-    pub fn get_right_diagonal(&self) -> impl Iterator<Item=&Tile> {
+    pub fn get_right_diagonal(&self) -> impl Iterator<Item = &Tile> {
         (0..self.size).map(move |index| &self.tiles[index * self.size + index])
     }
 
-    pub fn get_left_diagonal(&self) -> impl Iterator<Item=&Tile> {
+    pub fn get_left_diagonal(&self) -> impl Iterator<Item = &Tile> {
         (0..self.size).map(move |index| &self.tiles[index * self.size + self.size - 1 - index])
     }
 
@@ -62,7 +66,7 @@ impl Board {
             .replace(symbol.to_string());
     }
 
-    pub fn mark_clone_with_symbol(&self, symbol: &str, position: &usize) -> &Board{
+    pub fn mark_clone_with_symbol(&self, symbol: &str, position: &usize) -> &Board {
         let new_board = self.clone();
         new_board.mark_with_symbol(&symbol, position);
         new_board
@@ -82,7 +86,8 @@ impl Board {
         for tile in tiles {
             if !self.is_position_occupied(tile.position) {
                 empty_tiles.push(tile.position);
-            } else {}
+            } else {
+            }
         }
         empty_tiles
     }
@@ -94,7 +99,8 @@ impl Board {
         for tile in tiles {
             if !self.is_position_occupied(tile.position) {
                 empty_tiles.push(tile.position + 1);
-            } else {}
+            } else {
+            }
         }
         empty_tiles
     }
@@ -110,7 +116,7 @@ pub fn format_board(board: &Board) -> String {
         .collect::<String>()
 }
 
-fn tiles_to_string<'board>(tiles: impl Iterator<Item=&'board Tile>) -> String {
+fn tiles_to_string<'board>(tiles: impl Iterator<Item = &'board Tile>) -> String {
     tiles
         .map(|tile| format!("[{}] ", tile.symbol.borrow_mut().to_string()))
         .collect::<String>()
@@ -127,7 +133,7 @@ mod tests {
     }
 
     fn section_to_string<'board>(
-        board_section: impl Iterator<Item=impl Iterator<Item=&'board Tile>>,
+        board_section: impl Iterator<Item = impl Iterator<Item = &'board Tile>>,
     ) -> String {
         let mut section_to_string: String = String::new();
         for section in board_section {
@@ -242,22 +248,26 @@ mod tests {
     #[test]
     fn it_returns_a_list_of_empty_tiles_by_user_positions() {
         let board = Board::new(3);
-        populate_board(&board, "X X X \
-                                X X 6 \
-                                7 8 9".to_string());
+        populate_board(
+            &board,
+            "X X X \
+             X X 6 \
+             7 8 9"
+                .to_string(),
+        );
 
         assert_eq!(board.get_empty_tiles_by_user_position(), [6, 7, 8, 9])
     }
 
-//    #[test]
-//    fn the_board_is_reset_to_its_previous_state() {
-//        let board = Board::new(3);
-//        let board_tiles = board.tiles;
-//        populate_board(&board, "O X X \
-//                                X X X \
-//                                X O O".to_string());
-//        &board.reset(5);
-//
-//        assert_eq!(board_tiles[4].symbol.borrow_mut().to_string(), "5");
-//    }
+    //    #[test]
+    //    fn the_board_is_reset_to_its_previous_state() {
+    //        let board = Board::new(3);
+    //        let board_tiles = board.tiles;
+    //        populate_board(&board, "O X X \
+    //                                X X X \
+    //                                X O O".to_string());
+    //        &board.reset(5);
+    //
+    //        assert_eq!(board_tiles[4].symbol.borrow_mut().to_string(), "5");
+    //    }
 }

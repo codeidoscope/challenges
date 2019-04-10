@@ -6,6 +6,14 @@ very far out of my comfort zone. It is also a good way for me to test my mettle
 and see how I cope with ramping up on such a language in such a short amount of
 time.
 
+## This Tic Tac Toe is not unbeatable
+Rust has proven to be pretty difficult for me to get my head around, and after three
+different attempts at an unbeatable algorithm (minimax twice in an OO fashion,
+negamax once in an FP fashion), I'm afraid I was not able to deliver.
+
+You can currently explore the code by checking out the `unbeatable-player` branch of this
+repository.
+
 ## Requirements
 - Rust - I use `rustc 1.33.0 (2aa4c46cf 2019-02-28)` on this project, and I
 followed the installation instructions given on the
@@ -14,6 +22,18 @@ followed the installation instructions given on the
 ## Running the programme
 - You can start the programme by running `cargo build` from the `tic-tac-toe` folder.
 - You can run the tests by running `cargo test` from the `tic-tac-toe` folder.
+
+The game is currently configured to run a Human VS Simple Computer game. This can be changed by
+updating the type of the player in `main.rs`:
+
+- `let human_player = Human::new("X".to_string());` for a Human Player
+- `let computer_player = Computer::new("O".to_string());` for a Computer Player
+
+You can change the symbol for another character (or anything else), as long as it stays
+between the string's quotation marks. I.e. `"💩"` will work, but 💩 will not.
+
+For some extra fun, you can install [Clippy](https://github.com/rust-lang/rust-clippy) and run `cargo clippy`
+to see all the style issues my code has (I got rid of most of them).
 
 ## Features
 - [x] 3x3 board
@@ -24,10 +44,13 @@ followed the installation instructions given on the
 - [x] Input validation
 
 ## Areas for improvement
+- [ ] String VS &str - It would be nice to handle them elegantly using `AsRef` (you will see Clippy complain about it!)
 - [ ] The game status are currently strings, they could be made into Enums
 - [ ] The logic implemented to check a winner is clunky and inelegant
-- [ ] I do not have integration tests yet
+- [ ] I do not have integration tests
 - [ ] I am also not testing I/O capture.
+- [ ] I haven't been able to reproduce it consistently, but I think playing with emojis
+messes up with the logic to stop the computer from overwriting the position if it's not empty.
 
 ## Decisions and compromises made
 

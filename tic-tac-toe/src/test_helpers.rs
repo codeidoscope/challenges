@@ -15,9 +15,11 @@ mod tests {
     #[test]
     fn it_populates_a_board_when_given_a_string() {
         let board = Board::new(3);
-        let board_string = String::from("X 2 O \
-                                         4 5 6 \
-                                         7 8 9");
+        let board_string = String::from(
+            "X 2 O \
+             4 5 6 \
+             7 8 9",
+        );
 
         populate_board(&board, board_string);
         assert_eq!(board.tiles[0].symbol.borrow_mut().to_string(), "X");

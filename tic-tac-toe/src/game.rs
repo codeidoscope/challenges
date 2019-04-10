@@ -54,7 +54,13 @@ impl Game {
         let empty_positions = self.board.get_empty_tiles_by_user_position();
         let player_symbol = self.current_player.get_symbol().to_string();
         let opponent_symbol = self.opponent.get_symbol().to_string();
-        let player_move = self.current_player.get_move(&self.board, &self.game_rules, &player_symbol, &opponent_symbol, 1);
+        let player_move = self.current_player.get_move(
+            &self.board,
+            &self.game_rules,
+            &player_symbol,
+            &opponent_symbol,
+            1,
+        );
         let opponent_symbol = self.opponent.get_symbol().to_string();
 
         self.set_current_player_move(player_move);
