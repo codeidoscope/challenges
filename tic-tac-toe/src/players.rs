@@ -28,7 +28,7 @@ impl Player for Human {
                 Ok(input) if is_in_range(input) && is_empty_position(&empty_positions, input) => {
                     break input;
                 }
-                _ => eprintln!("Invalid position. Please select a position between 1 and 9.", ),
+                _ => eprintln!("Invalid position. Please select a position between 1 and 9."),
             }
         }
     }

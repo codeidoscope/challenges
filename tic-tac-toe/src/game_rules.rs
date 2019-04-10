@@ -118,13 +118,18 @@ mod tests {
     use super::*;
     use crate::players::Computer;
     use crate::players::Human;
+    use crate::test_helpers::populate_board;
 
     #[test]
     fn it_returns_true_if_three_symbols_are_the_same_in_a_section_of_the_board() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"X".to_string(), 1);
-        board.mark_with_symbol(&"X".to_string(), 5);
-        board.mark_with_symbol(&"X".to_string(), 9);
+        populate_board(
+            &board,
+            "X 2 3 \
+             4 X 6 \
+             7 8 X"
+                .to_string(),
+        );
         let right_diagonal = &mut board.get_right_diagonal();
         let game_rules = GameRules::new();
 
@@ -137,9 +142,13 @@ mod tests {
     #[test]
     fn it_returns_false_if_three_symbols_are_not_the_same_in_a_section_of_the_board() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"X".to_string(), 1);
-        board.mark_with_symbol(&"X".to_string(), 5);
-        board.mark_with_symbol(&"O".to_string(), 9);
+        populate_board(
+            &board,
+            "X 2 3 \
+             4 X 6 \
+             7 8 O"
+                .to_string(),
+        );
         let right_diagonal = &mut board.get_right_diagonal();
         let game_rules = GameRules::new();
 
@@ -152,9 +161,13 @@ mod tests {
     #[test]
     fn it_returns_true_if_three_symbols_are_aligned_on_the_board_by_rows() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"X".to_string(), 1);
-        board.mark_with_symbol(&"X".to_string(), 2);
-        board.mark_with_symbol(&"X".to_string(), 3);
+        populate_board(
+            &board,
+            "X X X \
+             4 5 6 \
+             7 8 9"
+                .to_string(),
+        );
         let board_rows = board.get_rows();
         let game_rules = GameRules::new();
 
@@ -167,9 +180,13 @@ mod tests {
     #[test]
     fn it_returns_false_if_three_symbols_are_not_aligned_on_the_board_by_rows() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"X".to_string(), 1);
-        board.mark_with_symbol(&"X".to_string(), 2);
-        board.mark_with_symbol(&"O".to_string(), 3);
+        populate_board(
+            &board,
+            "X X O \
+             4 5 6 \
+             7 8 9"
+                .to_string(),
+        );
         let board_rows = board.get_rows();
         let game_rules = GameRules::new();
 
@@ -182,9 +199,13 @@ mod tests {
     #[test]
     fn it_returns_true_if_three_symbols_are_aligned_on_the_board_by_columns() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"X".to_string(), 1);
-        board.mark_with_symbol(&"X".to_string(), 4);
-        board.mark_with_symbol(&"X".to_string(), 7);
+        populate_board(
+            &board,
+            "X 2 3 \
+             X 5 6 \
+             X 8 9"
+                .to_string(),
+        );
         let board_columns = board.get_columns();
         let game_rules = GameRules::new();
 
@@ -197,9 +218,13 @@ mod tests {
     #[test]
     fn it_returns_false_if_three_symbols_are_not_aligned_on_the_board_by_columns() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"X".to_string(), 1);
-        board.mark_with_symbol(&"X".to_string(), 4);
-        board.mark_with_symbol(&"O".to_string(), 7);
+        populate_board(
+            &board,
+            "X 2 3 \
+             X 5 6 \
+             O 8 9"
+                .to_string(),
+        );
         let board_columns = board.get_columns();
         let game_rules = GameRules::new();
 
@@ -212,9 +237,13 @@ mod tests {
     #[test]
     fn it_returns_true_if_three_symbols_are_aligned_on_the_right_diagonal_of_the_board() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"X".to_string(), 1);
-        board.mark_with_symbol(&"X".to_string(), 5);
-        board.mark_with_symbol(&"X".to_string(), 9);
+        populate_board(
+            &board,
+            "X 2 3 \
+             4 X 6 \
+             7 8 X"
+                .to_string(),
+        );
         let mut right_board_diagonal = board.get_right_diagonal();
         let mut left_board_diagonal = board.get_left_diagonal();
         let game_rules = GameRules::new();
@@ -232,9 +261,13 @@ mod tests {
     #[test]
     fn it_returns_false_if_three_symbols_are_not_aligned_on_the_right_diagonal_of_the_board() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"X".to_string(), 1);
-        board.mark_with_symbol(&"X".to_string(), 5);
-        board.mark_with_symbol(&"O".to_string(), 9);
+        populate_board(
+            &board,
+            "X 2 3 \
+             4 X 6 \
+             7 8 O"
+                .to_string(),
+        );
         let mut right_board_diagonal = board.get_right_diagonal();
         let mut left_board_diagonal = board.get_left_diagonal();
         let game_rules = GameRules::new();
@@ -252,9 +285,13 @@ mod tests {
     #[test]
     fn it_returns_true_if_three_symbols_are_aligned_on_the_left_diagonal_of_the_board() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"X".to_string(), 3);
-        board.mark_with_symbol(&"X".to_string(), 5);
-        board.mark_with_symbol(&"X".to_string(), 7);
+        populate_board(
+            &board,
+            "1 2 X \
+             4 X 6 \
+             X 8 9"
+                .to_string(),
+        );
         let mut right_board_diagonal = board.get_right_diagonal();
         let mut left_board_diagonal = board.get_left_diagonal();
         let game_rules = GameRules::new();
@@ -272,9 +309,13 @@ mod tests {
     #[test]
     fn it_returns_false_if_three_symbols_are_not_aligned_on_the_left_diagonal_of_the_board() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"X".to_string(), 3);
-        board.mark_with_symbol(&"X".to_string(), 5);
-        board.mark_with_symbol(&"O".to_string(), 7);
+        populate_board(
+            &board,
+            "1 2 X \
+             4 X 6 \
+             O 8 9"
+                .to_string(),
+        );
         let mut right_board_diagonal = board.get_right_diagonal();
         let mut left_board_diagonal = board.get_left_diagonal();
         let game_rules = GameRules::new();
@@ -292,9 +333,13 @@ mod tests {
     #[test]
     fn it_returns_true_if_there_if_three_symbols_are_aligned_on_the_board() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"X".to_string(), 3);
-        board.mark_with_symbol(&"X".to_string(), 5);
-        board.mark_with_symbol(&"X".to_string(), 7);
+        populate_board(
+            &board,
+            "1 2 X \
+             4 X 6 \
+             X 8 9"
+                .to_string(),
+        );
         let game_rules = GameRules::new();
 
         assert_eq!(game_rules.is_winner(&board, &"X".to_string()), true)
@@ -311,15 +356,13 @@ mod tests {
     #[test]
     fn it_return_true_if_the_board_is_full() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"X".to_string(), 1);
-        board.mark_with_symbol(&"O".to_string(), 2);
-        board.mark_with_symbol(&"X".to_string(), 3);
-        board.mark_with_symbol(&"O".to_string(), 4);
-        board.mark_with_symbol(&"X".to_string(), 5);
-        board.mark_with_symbol(&"O".to_string(), 6);
-        board.mark_with_symbol(&"X".to_string(), 7);
-        board.mark_with_symbol(&"O".to_string(), 8);
-        board.mark_with_symbol(&"X".to_string(), 9);
+        populate_board(
+            &board,
+            "O O X \
+             X X O \
+             O X X"
+                .to_string(),
+        );
         let game_rules = GameRules::new();
 
         assert_eq!(game_rules.is_full(&board), true);
@@ -336,10 +379,13 @@ mod tests {
     #[test]
     fn it_returns_player_o_wins_status_if_player_o_has_won() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"O".to_string(), 3);
-        board.mark_with_symbol(&"O".to_string(), 5);
-        board.mark_with_symbol(&"O".to_string(), 7);
-
+        populate_board(
+            &board,
+            "1 2 O \
+             4 O 6 \
+             O 8 9"
+                .to_string(),
+        );
         let player_one_symbol = Human::new("X".to_string()).symbol;
         let player_two_symbol = Computer::new("O".to_string()).symbol;
         let game_rules = GameRules::new();
@@ -353,10 +399,13 @@ mod tests {
     #[test]
     fn it_returns_player_x_wins_status_if_player_x_has_won() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"X".to_string(), 3);
-        board.mark_with_symbol(&"X".to_string(), 5);
-        board.mark_with_symbol(&"X".to_string(), 7);
-
+        populate_board(
+            &board,
+            "1 2 X \
+             4 X 6 \
+             X 8 9"
+                .to_string(),
+        );
         let player_one_symbol = Human::new("X".to_string()).symbol;
         let player_two_symbol = Computer::new("O".to_string()).symbol;
         let game_rules = GameRules::new();
@@ -384,16 +433,13 @@ mod tests {
     #[test]
     fn it_returns_draw_status_if_the_board_is_full() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"O".to_string(), 1);
-        board.mark_with_symbol(&"O".to_string(), 2);
-        board.mark_with_symbol(&"X".to_string(), 3);
-        board.mark_with_symbol(&"X".to_string(), 4);
-        board.mark_with_symbol(&"X".to_string(), 5);
-        board.mark_with_symbol(&"O".to_string(), 6);
-        board.mark_with_symbol(&"O".to_string(), 7);
-        board.mark_with_symbol(&"X".to_string(), 8);
-        board.mark_with_symbol(&"X".to_string(), 9);
-
+        populate_board(
+            &board,
+            "O O X \
+             X X O \
+             O X X"
+                .to_string(),
+        );
         let player_one_symbol = Human::new("X".to_string()).symbol;
         let player_two_symbol = Computer::new("O".to_string()).symbol;
         let game_rules = GameRules::new();
@@ -407,10 +453,13 @@ mod tests {
     #[test]
     fn it_returns_player_x_wins_string_when_player_x_is_winner() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"X".to_string(), 3);
-        board.mark_with_symbol(&"X".to_string(), 5);
-        board.mark_with_symbol(&"X".to_string(), 7);
-
+        populate_board(
+            &board,
+            "1 2 X \
+             4 X 6 \
+             X 8 9"
+                .to_string(),
+        );
         let player_one_symbol = Human::new("X".to_string()).symbol;
         let player_two_symbol = Computer::new("O".to_string()).symbol;
         let game_rules = GameRules::new();
@@ -430,10 +479,13 @@ mod tests {
     #[test]
     fn it_returns_player_o_wins_string_when_player_o_is_winner() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"O".to_string(), 3);
-        board.mark_with_symbol(&"O".to_string(), 5);
-        board.mark_with_symbol(&"O".to_string(), 7);
-
+        populate_board(
+            &board,
+            "1 2 O \
+             4 O 6 \
+             O 8 9"
+                .to_string(),
+        );
         let player_one_symbol = Human::new("X".to_string()).symbol;
         let player_two_symbol = Computer::new("O".to_string()).symbol;
         let game_rules = GameRules::new();
@@ -453,15 +505,13 @@ mod tests {
     #[test]
     fn it_returns_it_is_a_draw_string_when_there_is_no_winner() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"O".to_string(), 1);
-        board.mark_with_symbol(&"O".to_string(), 2);
-        board.mark_with_symbol(&"X".to_string(), 3);
-        board.mark_with_symbol(&"X".to_string(), 4);
-        board.mark_with_symbol(&"X".to_string(), 5);
-        board.mark_with_symbol(&"O".to_string(), 6);
-        board.mark_with_symbol(&"O".to_string(), 7);
-        board.mark_with_symbol(&"X".to_string(), 8);
-        board.mark_with_symbol(&"X".to_string(), 9);
+        populate_board(
+            &board,
+            "O O X \
+             X X O \
+             O X X"
+                .to_string(),
+        );
 
         let player_one_symbol = Human::new("X".to_string()).symbol;
         let player_two_symbol = Computer::new("O".to_string()).symbol;

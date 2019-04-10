@@ -91,6 +91,7 @@ fn tiles_to_string<'board>(tiles: impl Iterator<Item = &'board Tile>) -> String 
 mod tests {
     use super::*;
     use crate::players::Human;
+    use crate::test_helpers::populate_board;
 
     fn len(board: Board) -> usize {
         board.tiles.len()
@@ -212,11 +213,13 @@ mod tests {
     #[test]
     fn it_returns_a_list_of_empty_tiles_by_user_positions() {
         let board = Board::new(3);
-        board.mark_with_symbol(&"X".to_string(), 1);
-        board.mark_with_symbol(&"X".to_string(), 2);
-        board.mark_with_symbol(&"X".to_string(), 3);
-        board.mark_with_symbol(&"X".to_string(), 4);
-        board.mark_with_symbol(&"X".to_string(), 5);
+        populate_board(
+            &board,
+            "X X X \
+             X X 6 \
+             7 8 9"
+                .to_string(),
+        );
 
         assert_eq!(board.get_empty_tiles_by_user_position(), [6, 7, 8, 9])
     }
