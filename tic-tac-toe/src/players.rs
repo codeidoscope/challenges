@@ -6,9 +6,12 @@ use std::io::Write;
 use std::num::ParseIntError;
 use crate::board::Board;
 use crate::game_rules::GameRules;
+use std::cmp;
+use std::collections::HashMap;
+use crate::game::Game;
 
 pub trait Player {
-    fn get_move(&self, empty_positions: Vec<usize>) -> usize;
+    fn get_move(&self, board: &Board, game_rules: &GameRules, current_player: &String, opponent: &String, depth: isize) -> usize;
     fn get_symbol(&self) -> &String;
 }
 
@@ -26,7 +29,8 @@ pub struct UnbeatableComputer {
 }
 
 impl Player for Human {
-    fn get_move(&self, empty_positions: Vec<usize>) -> usize {
+    fn get_move(&self, board: &Board, game_rules: &GameRules, current_player: &String, opponent: &String, depth: isize) -> usize {
+        let empty_positions = board.get_empty_tiles_by_user_position();
         loop {
             println!("Select a position between 1 and 9: ");
             io::stdout().flush().expect("Failed to flush stdout");
@@ -46,7 +50,8 @@ impl Player for Human {
 }
 
 impl Player for Computer {
-    fn get_move(&self, empty_positions: Vec<usize>) -> usize {
+    fn get_move(&self, board: &Board, game_rules: &GameRules, current_player: &String, opponent: &String, depth: isize) -> usize {
+        let empty_positions = board.get_empty_tiles_by_user_position();
         let mut position = 0 as usize;
         while !empty_positions.contains(&position) {
             let mut rng = rand::thread_rng();
@@ -61,8 +66,9 @@ impl Player for Computer {
 }
 
 impl Player for UnbeatableComputer {
-    fn get_move(&self, empty_positions: Vec<usize>) -> usize {
-        unimplemented!()
+    fn get_move(&self, board: &Board, game_rules: &GameRules, current_player: &String, opponent: &String, depth: isize) -> usize {
+        let scored_positions = scored_positions(&board, &game_rules, &current_player, &opponent, depth);
+        select_best_position(scored_positions)
     }
 
     fn get_symbol(&self) -> &String {
@@ -94,37 +100,97 @@ impl UnbeatableComputer {
         }
     }
 
-    fn set_opponent_symbol(&mut self, symbol: String) {
-        self.opponent_symbol = symbol;
-    }
+//    fn set_opponent_symbol(&mut self, symbol: String) {
+//        self.opponent_symbol = symbol;
+//    }
+//
+//    fn take_turn(&mut self, board: &Board, position: usize) {
+//        board.mark_with_symbol(self.symbol.as_ref(), &position);
+//        self.swap_players();
+//    }
+//
+//    fn swap_players(&mut self) {
+//        std::mem::swap(&mut self.symbol, &mut self.opponent_symbol);
+//    }
+}
 
-    fn calculate_score(self, game_rules: &GameRules, board: &Board, depth: isize) -> isize {
-        let computer_symbol = "O".to_string();
-        let human_symbol = "X".to_string();
-        let status = game_rules.get_status(&board, &computer_symbol, &human_symbol);
-        let draw = "DRAW".to_string();
-        let computer_wins = "PLAYER_O_WINS".to_string();
-        let computer_loses = "PLAYER_X_WINS".to_string();
-
-        if status == draw {
-            0
-        } else if status == computer_wins {
-            10 + depth
-        } else if status == computer_loses {
-            -10 + depth
-        } else {
-            0
-        }
+fn negamax(board: &'static Board,
+           game_rules: &GameRules,
+           maximising_player: &String,
+           minimising_player: &String,
+           depth: isize) -> isize {
+    let mut highest_score = 0;
+    if game_rules.get_status(&board.clone(), &maximising_player, &minimising_player) == "IN_PROGRESS" || depth == 0 {
+        calculate_score(&game_rules, &board, depth);
+    } else {
+        highest_score = select_highest_score(scored_positions(board.clone(), game_rules, maximising_player, minimising_player, depth + 1));
+        -1 * highest_score;
     }
+    highest_score
+}
 
-    fn take_turn(&mut self, board: &Board, position: usize) {
-        board.mark_with_symbol(self.symbol.as_ref(), position);
-        self.swap_players();
-    }
+fn calculate_score(game_rules: &GameRules, board: &Board, depth: isize) -> isize {
+    let computer_symbol = "O".to_string();
+    let human_symbol = "X".to_string();
+    let status = game_rules.get_status(&board, &computer_symbol, &human_symbol);
+    let draw = "DRAW".to_string();
+    let computer_wins = "PLAYER_O_WINS".to_string();
+    let computer_loses = "PLAYER_X_WINS".to_string();
 
-    fn swap_players(&mut self) {
-        std::mem::swap(&mut self.symbol, &mut self.opponent_symbol);
+    if status == draw {
+        0
+    } else if status == computer_wins {
+        10 + depth
+    } else if status == computer_loses {
+        -10 + depth
+    } else {
+        0
     }
+}
+
+fn select_best_position(scored_positions: HashMap<isize, usize>) -> usize {
+    let highest_score = scored_positions.keys().max();
+    scored_positions.get(highest_score.unwrap()).unwrap().clone()
+}
+
+fn select_highest_score(scored_positions: HashMap<isize, usize>) -> isize {
+    let highest_score = scored_positions.keys().max();
+    scored_positions.get(highest_score.unwrap()).unwrap().clone() as isize
+}
+
+fn scored_positions(board: &'static Board,
+                    game_rules: &GameRules,
+                    current_player: &String,
+                    opponent: &String,
+                    depth: isize) -> HashMap<isize, usize> {
+    let mut scored_positions = HashMap::new();
+    let empty_positions = board.get_empty_tiles_by_user_position();
+    for position in empty_positions {
+        let score = score_position(board.clone(),
+                                   &game_rules,
+                                   position,
+                                   &current_player,
+                                   &opponent,
+                                   depth);
+        scored_positions.insert(score, position);
+    }
+    scored_positions
+}
+
+fn score_position(board: &'static Board,
+                  game_rules: &GameRules,
+                  position: usize,
+                  current_player: &String,
+                  opponent: &String,
+                  depth: isize) -> isize {
+    let cloned_board = board.clone();
+    let score = negamax(cloned_board.mark_clone_with_symbol(&current_player,
+                                                            &position),
+                        game_rules,
+                        current_player,
+                        opponent,
+                        depth);
+    score
 }
 
 fn read_input() -> String {
@@ -152,7 +218,6 @@ mod tests {
     use crate::board::Board;
     use crate::game_rules::GameRules;
     use crate::test_helpers::populate_board;
-    use crate::game::Game;
 
     #[test]
     fn it_creates_a_player_with_a_given_symbol() {
@@ -168,7 +233,7 @@ mod tests {
                                 O O O \
                                 O X X".to_string());
         let computer_player = UnbeatableComputer::new("O".to_string(), "X".to_string());
-        assert_eq!(computer_player.calculate_score(&game_rules, &board, 0), 10);
+        assert_eq!(calculate_score(&game_rules, &board, 0), 10);
     }
 
     #[test]
@@ -179,7 +244,7 @@ mod tests {
                                 X X X \
                                 X O O".to_string());
         let computer_player = UnbeatableComputer::new("O".to_string(), "X".to_string());
-        assert_eq!(computer_player.calculate_score(&game_rules, &board, 0), -10);
+        assert_eq!(calculate_score(&game_rules, &board, 0), -10);
     }
 
     #[test]
@@ -190,7 +255,7 @@ mod tests {
                                 X X O \
                                 O X X".to_string());
         let computer_player = UnbeatableComputer::new("O".to_string(), "X".to_string());
-        assert_eq!(computer_player.calculate_score(&game_rules, &board, 0), 0);
+        assert_eq!(calculate_score(&game_rules, &board, 0), 0);
     }
 
     #[test]
@@ -201,7 +266,7 @@ mod tests {
                                 O X O \
                                 O X X".to_string());
         let computer_player = UnbeatableComputer::new("O".to_string(), "X".to_string());
-        assert_eq!(computer_player.calculate_score(&game_rules, &board, 0), -10);
+        assert_eq!(calculate_score(&game_rules, &board, 0), -10);
     }
 
     #[test]
@@ -212,8 +277,8 @@ mod tests {
                                 O 5 O \
                                 O X X".to_string());
         let computer_player = UnbeatableComputer::new("O".to_string(), "X".to_string());
-        board.mark_with_symbol(&computer_player.symbol, 5);
-        assert_eq!(computer_player.calculate_score(&game_rules, &board, 0), 10);
+        board.mark_with_symbol(&computer_player.symbol, &5);
+        assert_eq!(calculate_score(&game_rules, &board, 0), 10);
     }
 
     #[test]
@@ -224,10 +289,10 @@ mod tests {
                                 O 5 O \
                                 O O X".to_string());
         let human_player = Human::new("X".to_string());
-        board.mark_with_symbol(&human_player.symbol, 5);
+        board.mark_with_symbol(&human_player.symbol, &5);
         let computer_player = UnbeatableComputer::new("O".to_string(), "X".to_string());
 
-        assert_eq!(computer_player.calculate_score(&game_rules, &board, 0), -10);
+        assert_eq!(calculate_score(&game_rules, &board, 0), -10);
     }
 
     #[test]
@@ -237,7 +302,6 @@ mod tests {
         populate_board(&board, "O 2 X \
                                 X 5 X \
                                 X O O".to_string());
-        let human_player = Human::new("X".to_string());
         let mut computer_player = UnbeatableComputer::new("O".to_string(), "X".to_string());
 
         assert_eq!(computer_player.opponent_symbol, "X");
@@ -247,4 +311,17 @@ mod tests {
         assert_eq!(board.tiles[4].symbol.borrow_mut().to_string(), "O");
         assert_eq!(computer_player.opponent_symbol, "O");
     }
+
+//    #[test]
+//    fn negamax_returns_positive_score_when_player_is_about_to_win() {
+//        let board = Board::new(3);
+//        let game_rules = GameRules::new();
+//
+//        populate_board(&board, "1 O O \
+//                                O X X \
+//                                X O X".to_string());
+//        let computer_player = UnbeatableComputer::new("O".to_string(), "X".to_string());
+//        let expected_score: isize = 18;
+//        assert_eq!(negamax(&board, &game_rules, &"X".to_string(), &"O".to_string(), 1), expected_score);
+//    }
 }

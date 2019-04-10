@@ -25,8 +25,7 @@ followed the installation instructions given on the
 
 ## Areas for improvement
 - [ ] The game status are currently strings, they could be made into Enums
-- [ ] The logic implemented to check a winner is very clunky and inelegant and
-I would like to revisit it and apply a more functional approach
+- [ ] The logic implemented to check a winner is clunky and inelegant
 - [ ] I do not have integration tests yet
 - [ ] I am also not testing I/O capture.
 
@@ -53,3 +52,8 @@ is the decision I made when implementing this.
 are instantiated. This is because of the mutability and ownership constraints set by Rust. It
 is a shift to think about these concepts while coding, and ten days has not been long enough for me to master
 them.
+
+- Although there are no integration tests or I/O tests, these cases were manually tested.
+These tests tend to be time-consuming when you don't have the best knowledge of the language,
+and I favoured delivering a program that is unit-tested and has most of the feature requested
+than an even more incomplete program.

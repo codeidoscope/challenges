@@ -4,7 +4,7 @@ pub fn populate_board(board: &Board, board_string: String) {
     let split_board_string = board_string.split_whitespace();
 
     for (i, symbol) in split_board_string.enumerate() {
-        board.mark_with_symbol(&symbol.to_string(), i + 1)
+        board.mark_with_symbol(&symbol.to_string(), &(i + 1))
     }
 }
 
