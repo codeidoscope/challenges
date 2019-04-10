@@ -7,7 +7,6 @@ mod board;
 mod game;
 mod game_rules;
 mod players;
-mod ui;
 
 fn main() {
     let board = board::Board::new(3);
