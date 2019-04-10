@@ -26,9 +26,9 @@ impl Board {
         Self { size, tiles }
     }
 
-    pub fn clone(self, board: Board) -> Board {
+    pub fn clone(&self) -> Board {
         let new_board = Board::new(3);
-        let board_string = board
+        let board_string = self
             .tiles
             .iter()
             .map(|tile| format!("{} ", tile.symbol.borrow_mut().to_string()))
@@ -66,7 +66,7 @@ impl Board {
             .replace(symbol.to_string());
     }
 
-    pub fn mark_clone_with_symbol(&self, symbol: &str, position: &usize) -> &Board {
+    pub fn mark_clone_with_symbol(&self, symbol: &str, position: &usize) -> Board {
         let new_board = self.clone();
         new_board.mark_with_symbol(&symbol, position);
         new_board
