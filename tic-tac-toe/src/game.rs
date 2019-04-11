@@ -55,7 +55,7 @@ impl Game {
         let player_symbol = self.current_player.get_symbol().to_string();
         let opponent_symbol = self.opponent.get_symbol().to_string();
         let player_move = self.current_player.get_move(
-            &self.board,
+            self.board.clone(),
             &self.game_rules,
             &player_symbol,
             &opponent_symbol,
