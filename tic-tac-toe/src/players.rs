@@ -139,7 +139,7 @@ fn negamax(
 ) -> isize {
     let mut highest_score = 0;
     if game_rules.get_status(&board.clone(), &maximising_player, &minimising_player)
-        == "IN_PROGRESS"
+        != "IN_PROGRESS"
         || depth == 0
     {
         calculate_score(&game_rules, board, depth);
