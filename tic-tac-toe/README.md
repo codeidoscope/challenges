@@ -12,7 +12,8 @@ different attempts at an unbeatable algorithm (minimax twice in an OO fashion,
 negamax once in an FP fashion), I'm afraid I was not able to deliver.
 
 You can currently explore the code by checking out the `unbeatable-player` branch of this
-repository.
+repository. This section of the README will be updated on the branch to provide you with more 
+context regarding the issue.
 
 ## Requirements
 - Rust - I use `rustc 1.33.0 (2aa4c46cf 2019-02-28)` on this project, and I
@@ -33,7 +34,7 @@ You can change the symbol for another character (or anything else), as long as i
 between the string's quotation marks. I.e. `"💩"` will work, but 💩 will not.
 
 For some extra fun, you can install [Clippy](https://github.com/rust-lang/rust-clippy) and run `cargo clippy`
-to see all the style issues my code has (I got rid of most of them).
+from the `tic-tac-toe` folder to see all the style issues my code has (I got rid of most of them).
 
 ## Features
 - [x] 3x3 board
