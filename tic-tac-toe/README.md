@@ -12,8 +12,28 @@ different attempts at an unbeatable algorithm (minimax twice in an OO fashion,
 negamax once in an FP fashion), I'm afraid I was not able to deliver.
 
 You can currently explore the code by checking out the `unbeatable-player` branch of this
-repository. This section of the README will be updated on the branch to provide you with more 
-context regarding the issue.
+repository. At current, I believe that the problem comes from my `calculate_score` function.
+You will notice there is an `else` statement on `L173` that returns `0`. It was added in because
+if statements in Rust require an else to work in most cases, and match conditions also require a
+default case. However, Rust does not have a `nil` or `null` function, and I couldn't break out of
+the loop or print nothing. It is not supposed to be reached by my code, but a morning of debugging
+showed me that it is.
+
+I suspect it happens when the game is still in progress, however, I am stumped as to why this happens,
+given that this function should only be reached when the game is not in progress (this is defined in the
+`negamax` function that calls `calculate_score`.
+
+"But Marion, where are your tests?!" I hear you say. My Negamax implementation was written on Wednesday,
+in a fit of panic and I thought I would lose time trying to TDD Negamax. My plan was to translate my Clojure
+Negamax, and write the tests when I had all my functions. I used manual testing as a gauge of whether I was
+headed in the right direction, and was hit hard by the dreaded Borrow Checker, which led me down a few
+referential rabbit holes (it does that thing where it tells you to consider using a reference when something
+doesn't work, and you do that and then it complains that you need to add lifetimes and then you try to do that
+and not only does it not work, you wasted an hour doing things you now realise you now need to undo).
+
+By then, it was 7pm and my brain had melted. So yeah, I don't have tests and it was a mistake.
+I tried to salvage it this morning, and decided to focus on my presentation instead, as I believe
+that despite not being unbeatable, the current code shows my design and architecture decisions.
 
 ## Requirements
 - Rust - I use `rustc 1.33.0 (2aa4c46cf 2019-02-28)` on this project, and I
