@@ -13,7 +13,6 @@ grown as a developer I now have a few points I can expand and improve on.
 
 
 ## Changes made
-
 - I am shortening this article to around 1000 words, which gives me space
 to discuss strategies, but forces me to keep the rambling at bay.
 
