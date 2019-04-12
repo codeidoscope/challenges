@@ -5,7 +5,7 @@ Have you ever noticed how programming can sometimes feel like you are in a forei
 ## if human { speak } else { code }
 Unlike humans, computers are pretty terrible at inferring meaning. With humans, you can get away with using broken sentences - such as “museum - where?” - or you can pronounce all the syllables in “Leicester Square” and have a Brit rolls their eyes at you because they insist it’s “Lester Square”, but the chances are that you will eventually find a kind soul to point a finger in the right direction.
 
-Computers, on the other hand, like precision. They need to be told exactly what to do, in a precise manner, with the right characters in the right place. If you forget to close a bracket, or your conditions a little odd, your computer will probably give you an error message and make you try again. Learning to talk to your computer is just as difficult as learning a foreign languages, but for different reasons. 
+Computers, on the other hand, like precision. They need to be told exactly what to do, in a precise manner, with the right characters in the right place. If you forget to close a bracket, or your conditions a little odd, your computer will probably give you an error message and make you try again. Learning to talk to your computer is just as difficult as learning a foreign languages, but for different reasons.
 
 The vocabulary and grammar of your chosen programming language are likely more succinct than that of a natural language. However, you will need to undo the years you have spent extrapolating and inferring meaning, reading body language, making connections between seemingly unrelated ideas, and instead bend your thoughts to follow a much stricter set of rules.
 
@@ -26,7 +26,7 @@ The brain is wonderful at learning everything under the sun, but it is terrible 
 
 Reframing thoughts helps greatly when you want to be kind to yourself, and once it becomes ingrained, you may even find yourself manipulating thoughts and ideas in ways that will help you find different angles for the problems you are tackling. You can also practice gratitude by writing down a short list of things you are grateful for (I found a nice theme for my IDE, I got a seat on the train into work…). This trains your brain to see the positive in things, and makes the process easier as your find joy in the little things.
 
-##Recognise your achievements
+## Recognise your achievements
 As developers, chances are we have learnt a couple of new things during a day at work. However, it is easy to dismiss the progress we have made and the successes we encounter as the challenges we tackle soon become second-nature. While gratitude makes it easier to recognise achievements, another useful tool is to keep a blog and (or) a daily log. These help keep track of what we learn, what we accomplish, the problems we encounter and the solutions we find.
 
 I like to write blog posts about topics I am interested in and want to explore more in-depth, often using them as a way to do research into that topic. I also write daily logs in which I keep track of what I intend on doing, what I have learnt, what I want to explore and the useful resources I found that day. These then become tangible proof of our progress, as well as an archive of knowledge we acquired and it becomes easier to look back and see how far we have come.
