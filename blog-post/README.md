@@ -11,7 +11,6 @@ The original post is very long (3000+ words) and I ramble on quite a lot, so
 it was a good candidate for a revisit. Since I wrote it in December, I have
 grown as a developer I now have a few points I can expand and improve on.
 
-
 ## Changes made
 
 - I am shortening this article to around 1000 words, which gives me space
