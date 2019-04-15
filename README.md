@@ -21,5 +21,6 @@ transcript of the presentation itself.
 
 ## tic-tac-toe
 You will find the codebase for a Human VS Unbeatable Computer game of
-Tic Tac Toe written in Rust. Please refer to the README file for setting it up
-and playing the game.
+Tic Tac Toe written in Rust. In order to see the code, please switch to
+the `tic-tac-toe` branch of this repository. Please refer to the README file
+for setting it up and playing the game.
